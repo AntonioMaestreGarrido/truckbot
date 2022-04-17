@@ -83,7 +83,7 @@ function setListeners() {
   document.getElementById("deleteTruck").addEventListener("click",(e)=>deleteTrucks(e))
   document.getElementById("testSort").addEventListener("click",(e)=>sortListado(e))
   document.getElementById("testArrived").addEventListener("click",(e)=>testArrive(e))
-  document.getElementById("saveTable").addEventListener("click",(e)=>testArrive(e))
+  
   
   
 }
