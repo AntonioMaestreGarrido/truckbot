@@ -1,0 +1,32 @@
+#tableContainer{
+    background-color: rgba(86, 142, 206, 0.589);
+    width: fit-content;
+    height: fit-content;
+    font-weight: 900;
+    
+}
+th{
+    font-size: 20px;
+    color: blue;
+}
+#tableContainer td,th{
+    border: solid black 2px;
+    padding: 2px;
+
+}
+input{
+    margin: auto;
+    margin-top: auto;
+    border: solid red 1px;
+    vertical-align: bottom;
+}
+#tableContainer td:nth-child(1) {
+    border: none;
+    padding: 2px;
+
+}
+th input{
+    margin-bottom:4px;
+    
+}
+
