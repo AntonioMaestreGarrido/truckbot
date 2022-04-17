@@ -46,8 +46,8 @@ export async function fetchSesameData() {
      
      return data
  }
- export async function checkArrive(vrid) {
-    let data =await fetch("http://localhost:3001/truckData/"+vrid)
+ export async function fetchMmatTruckStopsData(vrid) {
+    let data =await fetch("http://localhost:3001/truckStopData/"+vrid)
                                 
                                 
       .then((response) => response.json())

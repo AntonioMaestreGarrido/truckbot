@@ -6,7 +6,7 @@
 
 import { refineArray } from "./src/arrayAux.js";
 import { renderList } from "./src/renderList.js";
-import { fetchMmatTruckData, fetchSesameData, fetchSscData } from "./src/sesameGate.js";
+import { fetchMmatTruckData, fetchMmatTruckStopsData, fetchSesameData, fetchSscData } from "./src/sesameGate.js";
 
 
 //listado de constantes que definen la posicion en el array
@@ -52,7 +52,7 @@ async function handleRefreshSesameButton() {
   
   newLista.forEach(ele => {
     let vrid=ele[VRID]
-    console.log(vrid,oldList.some(row=>row.includes( vrid)))
+    
     if(!oldList.some(row=>row.includes( vrid))){
       oldList.push(ele)
       console.log("se ha incluido "+vrid)
@@ -64,7 +64,7 @@ async function handleRefreshSesameButton() {
   });
   saveLocalStorage(oldList)
   renderList(oldList)
-  console.log(oldList)
+  
   document.getElementById("tableContainer").classList.remove("loader")
   //let newLista=[...oldList,...newLista,]
   
@@ -83,6 +83,8 @@ function setListeners() {
   document.getElementById("deleteTruck").addEventListener("click",(e)=>deleteTrucks(e))
   document.getElementById("testSort").addEventListener("click",(e)=>sortListado(e))
   document.getElementById("testArrived").addEventListener("click",(e)=>testArrive(e))
+  document.getElementById("saveTable").addEventListener("click",(e)=>testArrive(e))
+  
   
 }
 async function testArrive(){
@@ -92,7 +94,16 @@ async function testArrive(){
       console.log(ele[VRID])
       
        let data = await fetchMmatTruckData(ele[VRID])
-       console.log(data.vrId,data.executionStatus)
+       console.log(ele[VRID],data)
+
+    }
+  })
+  listado.forEach(async (ele)=>{
+    if(!ele[ARRIVED]){
+      console.log(ele[VRID])
+      
+       let data = await fetchMmatTruckStopsData(ele[VRID])
+       console.log(ele[VRID],data)
 
     }
   })
@@ -134,7 +145,7 @@ async function testfecth() {
  
   
 let listado=await checkLocalStorage()
-console.log(listado)
+
 listado.forEach(async (ele) => {
   let v=ele[VRID]
   if (v!=="VRID"){
@@ -181,6 +192,7 @@ listado.forEach(async (ele) => {
 // })
 // .then((response) => response.json())
 // .then((data) => {console.log(data);return  data})
+//https://trans-logistics-eu.amazon.com/fmc/api/v2/execution/load/112V2DT4F/mapFeature/stops
 
 }
 
