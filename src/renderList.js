@@ -42,7 +42,7 @@ export function renderList(listado) {
     for (let i = 0; i < listado[0].length; i++) {
       //      console.log("posisiocion " + i, listado[j][i]);
       let th = document.createElement("td");
-      th.setAttribute("contenteditable","true")
+      //th.setAttribute("contenteditable","true")
       th.classList.add(listado[0][i]);
       th.textContent = listado[j][i];
       fila.appendChild(th);

@@ -6,11 +6,12 @@
 
 import { refineArray } from "./src/arrayAux.js";
 import { renderList } from "./src/renderList.js";
-import { fetchMmatTruckData, fetchMmatTruckStopsData, fetchSesameData, fetchSscData } from "./src/sesameGate.js";
+import { fetchMmatTruckData, fetchMmatTruckStopsData, fetchSesameData, fetchSscData, fetchYardData } from "./src/sesameGate.js";
 
 
 //listado de constantes que definen la posicion en el array
-const DQA2={"latitude":36.69600329644401,"longitude": -4.477451896032319}
+const SITE={"latitude":36.69600329644401,"longitude": -4.477451896032319,"name":"DQA2"}
+
 const VRID = 3;
 const ARRIVED = 6;
 const CABECERA=["Time","Date","Action","VRID","Lane","Reason","Arrived","Logged","Dock"]
@@ -83,27 +84,55 @@ function setListeners() {
   document.getElementById("deleteTruck").addEventListener("click",(e)=>deleteTrucks(e))
   document.getElementById("testSort").addEventListener("click",(e)=>sortListado(e))
   document.getElementById("testArrived").addEventListener("click",(e)=>testArrive(e))
-  
+  document.getElementById("testYard").addEventListener("click",(e)=>testYard(e))
+  //testYard
   
   
 }
+async function testYard(){
+  let data= await fetchYardData()
+  console.log(data)
+  let listado= await getLocalStorage()
+  listado.forEach(ele => {
+    let vrid=ele[VRID]
+    data.forEach((ele)=>{
+      if(ele.includes(vrid)){
+        console.log(vrid,ele)
+      }
+    })
+    
+  });
+}
 async function testArrive(){
   let listado = await getLocalStorage()
-  listado.forEach(async (ele)=>{
-    if(!ele[ARRIVED]){
-      console.log(ele[VRID])
+  // listado.forEach(async (ele)=>{
+  //   if(!ele[ARRIVED]){
+  //     console.log(ele[VRID])
       
-       let data = await fetchMmatTruckData(ele[VRID])
-       console.log(ele[VRID],data)
+  //      let data = await fetchMmatTruckData(ele[VRID])
+  //      console.log(ele[VRID],data)
 
-    }
-  })
+  //   }
+  // })
   listado.forEach(async (ele)=>{
     if(!ele[ARRIVED]){
-      console.log(ele[VRID])
+      let vrid=ele[VRID]
       
        let data = await fetchMmatTruckStopsData(ele[VRID])
-       console.log(ele[VRID],data)
+       //console.log(ele[VRID],data[SITE.name])
+       data.forEach((ele)=>{
+         if(ele.timelineEvent.title===SITE.name){
+           //console.log(vrid,ele.timelineEvent.stopActions[0].events)
+           let events=ele.timelineEvent.stopActions[0].events
+
+           events.forEach(e=>{if(e.localizableDescription.enumValue==="CHECKED_IN"){
+             
+              console.log(vrid,e,new Date( e.timeAndFacilityTimeZone.instant))
+           }})
+         }
+         //[0].timelineEvent.title
+         //timelineEvent.stopActions[0].events
+       })
 
     }
   })

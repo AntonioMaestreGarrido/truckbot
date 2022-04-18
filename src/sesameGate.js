@@ -57,6 +57,24 @@ export async function fetchSesameData() {
         
       })
       .catch((error) => console.log("No se ha podido acceder a SSC", error));
-      console.log(data)
+      
       return data
   }
+  //http://localhost:3001/getYardInfo/
+
+  export async function fetchYardData() {
+    let scc=await fetch("http://localhost:3001/getYardInfo")
+                               
+                               
+     .then((response) => response.json())
+     .then((data) => {
+         
+         let scc=data
+         console.log(scc)
+         return scc
+       
+     })
+     .catch((error) => console.log("No se ha podido acceder a SSC", error));
+     
+     return scc
+ }
