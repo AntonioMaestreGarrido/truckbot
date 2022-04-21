@@ -6,17 +6,44 @@
 
 import { refineArray } from "./src/arrayAux.js";
 import { renderList } from "./src/renderList.js";
-import { fetchMmatTruckData, fetchMmatTruckStopsData, fetchSesameData, fetchSscData, fetchYardData } from "./src/sesameGate.js";
-
+import {
+  fetchMmatTruckData,
+  fetchMmatTruckStopsData,
+  fetchSesameData,
+  fetchSscData,
+  fetchYardData,
+} from "./src/sesameGate.js";
+import { sendNotification } from "./src/noti.js";
 
 //listado de constantes que definen la posicion en el array
-const SITE={"latitude":36.69600329644401,"longitude": -4.477451896032319,"name":"DQA2"}
+const SITE = {
+  latitude: 36.69600329644401,
+  longitude: -4.477451896032319,
+  name: "DQA2",
+};
+export const FIELD = {
+  EXPECTED:1,
+  ACTION:3,
+  VRID: 4,
 
-const VRID = 3;
-const ARRIVED = 6;
-const CABECERA=["Time","Date","Action","VRID","Lane","Reason","Arrived","Logged","Dock"]
+  VOLUME: 7,
+  ARRIVED: 8,
+  LOGGED: 9,
+  DOCK:10
+};
+const CABECERA = [
+  "Time",
+  "Date",
+  "Action",
+  "VRID",
+  "Lane",
+  "Reason",
+  "Arrived",
+  "Logged",
+  "Dock",
+];
 
-document.getElementById("tableContainer").style.cursor = "pointer"
+document.getElementById("tableContainer").style.cursor = "pointer";
 
 let listado;
 //localStorage.clear();
@@ -25,6 +52,7 @@ let listado;
 setListeners();
 
 export async function getLocalStorage() {
+  //localStorage.clear()
   if (!localStorage.listadoCamiones) {
     console.log("listado vacio");
     listado = await fetchSesameData();
@@ -33,44 +61,42 @@ export async function getLocalStorage() {
     localStorage.setItem("listadoCamiones", JSON.stringify(listadoCamiones));
     console.log(localStorage.listadoCamiones);
   } else {
-    console.log(localStorage.getItem("listadoCamiones"))
+    //console.log(localStorage.getItem("listadoCamiones"));
     listado = JSON.parse(localStorage.getItem("listadoCamiones"));
     return listado;
   }
 }
-function saveLocalStorage(array){
-  localStorage.setItem("listadoCamiones", JSON.stringify(array));
-    console.log(localStorage.listadoCamiones);
-
+export function saveLocalStorage(array) {
+  if (Array.isArray(array)) {
+    localStorage.setItem("listadoCamiones", JSON.stringify(array));
+//    console.log(localStorage.listadoCamiones);
+  }
 }
 async function handleRefreshSesameButton() {
- document.getElementById("tableContainer").classList.add("loader")
+  document.getElementById("tableContainer").classList.add("loader");
   let oldList = await getLocalStorage();
-  
+
   // fantastic oneliner to find keys in 2d arrays
   // console.log(oldList.some(row=>row.includes( "VRID")))
 
- 
-  let newLista = refineArray( await fetchSesameData())
-  
-  newLista.forEach(ele => {
-    let vrid=ele[VRID]
-    
-    if(!oldList.some(row=>row.includes( vrid))){
-      oldList.push(ele)
-      console.log("se ha incluido "+vrid)
-    }else{
-      console.log("no se ha incluido:"+vrid)
+  let newLista = refineArray(await fetchSesameData());
+
+  newLista.forEach((ele) => {
+    console.log("ele[FIELD.VRID]",ele[FIELD.VRID],FIELD.VRID)
+    let vrid = ele[FIELD.VRID];
+
+    if (!oldList.some((row) => row.includes(vrid))) {
+      oldList.push(ele);
+      console.log("se ha incluido " + vrid);
+    } else {
+      console.log("no se ha incluido:" + vrid);
     }
-    
-    
   });
-  saveLocalStorage(oldList)
-  renderList(oldList)
-  
-  document.getElementById("tableContainer").classList.remove("loader")
+  saveLocalStorage(oldList);
+  renderList(oldList);
+
+  document.getElementById("tableContainer").classList.remove("loader");
   //let newLista=[...oldList,...newLista,]
-  
 }
 function setListeners() {
   document
@@ -83,148 +109,222 @@ function setListeners() {
       renderList(JSON.parse(localStorage.getItem("listadoCamiones")))
     );
   document.getElementById("test").addEventListener("click", () => testTruck());
-  document.getElementById("deleteTruck").addEventListener("click",(e)=>deleteTrucks(e))
-  document.getElementById("testSort").addEventListener("click",(e)=>sortListado(e))
-  document.getElementById("testArrived").addEventListener("click",(e)=>testArrive(e))
-  document.getElementById("testYard").addEventListener("click",(e)=>testYard(e))
+  document
+    .getElementById("deleteTruck")
+    .addEventListener("click", (e) => deleteTrucks(e));
+
+  document
+    .getElementById("testArrived")
+    .addEventListener("click", (e) => testArrive(e));
+  document
+    .getElementById("testYard")
+    .addEventListener("click", (e) => testYard(e));
+  document
+    .getElementById("testNotification")
+    .addEventListener("click", (e) => sendNotification(e));
+
+  document
+    .getElementById("testSCC")
+    .addEventListener("click", (e) => fetchSscData(e));
+  document
+    .getElementById("clear")
+    .addEventListener("click", (e) => localStorage.clear());
+
+  testSCC;
+  //testNotification
   //testYard
-  
-  
 }
-async function testYard(){
-  let data= await fetchYardData()
-  console.log(data)
-  let listado= await getLocalStorage()
-  listado.forEach(ele => {
-    let vrid=ele[VRID]
-    data.forEach((ele)=>{
-      if(ele.includes(vrid)){
-        console.log(vrid,ele)
-      }
-    })
-    
+async function testYard() {
+  truckData("113NSNYB4",FIELD.DOCK,"IBO 01")
+  let data = await fetchYardData();
+  //console.log(data);
+  let listado = await getLocalStorage();
+  data.forEach((dock) => {
+    //console.log(dock)
+ if (dock.yardAssets.length>0){
+  dock.yardAssets.forEach((dock)=>{if (dock.load.identifiers[0]!==null){
+    truckData(dock.load.identifiers[0].identifier,FIELD.DOCK,dock.code)
+    console.log(dock.load.identifiers[0].identifier)}})
+  //console.log(dock.code,dock.yardAssets[0].load.identifiers[0].identifier)
+  //console.log(dock.code,dock.yardAssets)[1].load.identifiers[0].identifier
+
+ }
   });
 }
-async function testArrive(){
-  let listado = await getLocalStorage()
+async function testArrive() {
+  let test = [
+    "7:00:00 AM",
+    "7:00:00 AM",
+    "2022-04-21",
+    "Dropoff",
+    "114BFJQXK",
+    "MAD6->DQA2",
+    "ATSOutbound",
+    "-",
+    false,
+    false,
+    "-",
+  ];
+  let listado = await getLocalStorage();
+ // listado.push(test);
+  saveLocalStorage(listado);
   // listado.forEach(async (ele)=>{
   //   if(!ele[ARRIVED]){
   //     console.log(ele[VRID])
-      
+
   //      let data = await fetchMmatTruckData(ele[VRID])
   //      console.log(ele[VRID],data)
 
   //   }
   // })
-  listado.forEach(async (ele)=>{
-    if(!ele[ARRIVED]){
-      let vrid=ele[VRID]
-      
-       let data = await fetchMmatTruckStopsData(ele[VRID])
-       //console.log(ele[VRID],data[SITE.name])
-       data.forEach((ele)=>{
-         if(ele.timelineEvent.title===SITE.name){
-           //console.log(vrid,ele.timelineEvent.stopActions[0].events)
-           let events=ele.timelineEvent.stopActions[0].events
+  const sccList = await fetchSscData();
+  //console.log(sccList);
+  //'115H7Y9HP', 'MAD4', 'In Yard', 'IB08', '08:15', '07:15', '1271', 'View'
+  //console.log(sccList.filter((ele) => ele.length > 1));
+  sccList
+    .filter((ele) => ele.length > 1)
+    .forEach((ele) => {
+      listado.forEach((e) => {
+        // console.log(ele);
+        //console.log(ele[0], e[FIELD.VRID]);
 
-           events.forEach(e=>{if(e.localizableDescription.enumValue==="CHECKED_IN"){
-             
-              console.log(vrid,e,new Date( e.timeAndFacilityTimeZone.instant))
-           }})
-         }
-         //[0].timelineEvent.title
-         //timelineEvent.stopActions[0].events
-       })
+        if (e.includes(ele[0])) {
+          console.log(`Vris encontrado ${ele[1]} con ${ele[6]} paquetes`);
+          if (!e[FIELD.ARRIVED] && ele[2]==="In Yard") {
+            e[FIELD.ARRIVED] = true;
+            sendNotification(e)
+          }
+          e[FIELD.VOLUME] = ele[6];
+          e[FIELD.EXPECTED]=ele[5]
+        }
+      });
+    });
 
-    }
-  })
-}
+  listado.forEach(async (camion) => {
+    if (!camion[FIELD.ARRIVED]||!camion[FIELD.LOGGED]) {
+      let vrid = camion[FIELD.VRID];
 
+      let data = await fetchMmatTruckStopsData(camion[FIELD.VRID]);
+      //console.log(ele[VRID],data[SITE.name])
+      data.forEach((ele) => {
+        console.log(ele.timelineEvent.title)
+        if (ele.timelineEvent.title === SITE.name) {
+          //console.log(vrid,ele.timelineEvent.stopActions[0].events)
+          let events = ele.timelineEvent.stopActions[0].events;
+
+          events.forEach((e) => {
+            if (e.localizableDescription.enumValue === "CHECKED_IN") {
+              if(e.eventSource==="YMS"){
+                camion[FIELD.LOGGED]=true
+                camion[FIELD.ARRIVED]=true
+                console.log(`Camion ${vrid} metido en el sistema a las ${new Date( e.timeAndFacilityTimeZone.instant)}` )
+                
+              //console.log(vrid, e, new Date(e.timeAndFacilityTimeZone.instant));
+            }
+              if(e.eventSource==="MOBILE_GEOFENCED"){
+                camion[FIELD.ARRIVED]=true
+                sendNotification(camion)
+                console.log(camion)
+                console.log(`Camion ${vrid} marca llegada a las ${new Date( e.timeAndFacilityTimeZone.instant)}` )
+              } 
+            
+          }
+        })
+        //[0].timelineEvent.title
+        //timelineEvent.stopActions[0].events
+      }
+    })
+  }
+  saveLocalStorage(listado);
+  renderList(listado);
+})}
 
 // borra el local storage y carga listado desde el sesame
-async function deleteTrucks(e){
-  let listado= await getLocalStorage()
-  let newListado
-  const checkBoxes=document.querySelectorAll("input")
-  checkBoxes.forEach(ele => {
-    if(ele.checked){
-      let vridToDelete=ele.parentElement.parentElement.getAttribute("VRID")
-      
-      listado.forEach((ele,index)=>{
-        if(ele[VRID]==vridToDelete){
-          console.log(listado[index])
-          listado.splice(index,1)
-        }})
-      
-  }});
-  saveLocalStorage(listado)
-  renderList(listado)
-  
+async function deleteTrucks(e) {
+  let listado = await getLocalStorage();
+  let newListado;
+  const checkBoxes = document.querySelectorAll("input");
+  checkBoxes.forEach((ele) => {
+    if (ele.checked) {
+      let vridToDelete = ele.parentElement.parentElement.getAttribute("VRID");
+
+      listado.forEach((ele, index) => {
+        if (ele[FIELD.VRID] == vridToDelete) {
+          console.log(listado[index]);
+          listado.splice(index, 1);
+        }
+      });
+    }
+  });
+  saveLocalStorage(listado);
+  renderList(listado);
 }
 async function getSCCdata() {}
 async function testTruck() {
   let listado = await getLocalStorage();
   //const listadoToTest=listado.filter((ele)=>console.log(ele))
   //const stationCommandCenter=await fetchSscData()
-  listado[3][6] = true;
+  listado[3][7] = true;
   console.log(listado);
-  renderList(listado.filter((ele, i) => ele[ARRIVED] === false || i === 0));
+  renderList(
+    listado.filter((ele, i) => ele[FIELD.ARRIVED] === false || i === 0)
+  );
 
   testfecth();
 }
 async function testfecth() {
- 
-  
-let listado=await checkLocalStorage()
+  let listado = await checkLocalStorage();
 
-listado.forEach(async (ele) => {
-  let v=ele[VRID]
-  if (v!=="VRID"){
-  let d = await  fetchMmatTruckData(v)
-  console.log(d)}
-  
-});
+  listado.forEach(async (ele) => {
+    let v = ele[VRID];
+    if (v !== "VRID") {
+      let d = await fetchMmatTruckData(v);
+      console.log(d);
+    }
+  });
 
-// let se= await fetch("https://sesamegateservice-eu-ext.amazon.com/listLoadsWithInYardDestinationMetadata", {
-//     "credentials": "omit",
-//     "headers": {
-//         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101 Firefox/91.0",
-//         "Accept": "application/json, text/plain, */*",
-//         "Accept-Language": "en-US,en;q=0.5",
-//         "Content-Type": "application/json;charset=utf-8",
-//         "x-amz-yardtech-sesame-sessionToken": "eyJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE2NTAxNDAwODEsImlzcyI6IllNUy0xLjAiLCJjb250ZXh0Ijp7ImFjY291bnRJZCI6IkEyS0VORUw0VjM2WDg0IiwieWFyZCI6InlhcmQiLCJ1c2VyVHlwZSI6IndlYmFwcCIsInVzZXJOYW1lIjoiYW1tYWVzdHJAYW1hem9uLmNvbSIsInVzZXJJZCI6IkEzNk5DUVFEOEoyUjVIIiwidGVybWluYWxTb2Z0d2FyZU5hbWUiOiJHRU0ifSwiZXhwIjoxNjUwNzQ1MDAxLCJpYXQiOjE2NTAxNDAyMDF9.eWSNtF3yIQj45ga-H3YR_OK5RaX9A3hWvSTmlV37nXs",
-//         "Sec-Fetch-Dest": "empty",
-//         "Sec-Fetch-Mode": "cors",
-//         "Sec-Fetch-Site": "same-site"
-//     },
-//     "referrer": "https://trans-logistics-eu.amazon.com/",
-//     "body": "{\"buildingCode\":\"DQA2\",\"yardId\":\"amzn1.ydlr.yard.EU.d2b62273-28f4-95f8-9dc6-4891f7115472\",\"startTime\":1650053807,\"endTime\":1650226607,\"context\":{\"requester\":\"GEM\",\"login\":\"ammaestr@amazon.com\",\"accountId\":\"A2KENEL4V36X84\",\"customerId\":\"A36NCQQD8J2R5H\"}}",
-//     "method": "POST",
-//     "mode": "cors"
-// })
-// let se =await fetch("https://jwmjkz3dsd.execute-api.eu-west-1.amazonaws.com/call/getYardStateWithPendingMoves", {
-//     "credentials": "omit",
-//     "headers": {
-//         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101 Firefox/91.0",
-//         "Accept": "application/json, text/plain, */*",
-//         "Accept-Language": "en-US,en;q=0.5",
-//         "api": "getYardStateWithPendingMoves",
-//         "method": "POST",
-//         "token": "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJZTVMtMS4wIiwiY29udGV4dCI6eyJhY2NvdW50SWQiOiJBMktFTkVMNFYzNlg4NCIsInlhcmQiOiJEUUEyIiwidXNlclR5cGUiOiJ3ZWJhcHAiLCJ1c2VyTmFtZSI6ImFtbWFlc3RyQGFtYXpvbi5jb20iLCJ1c2VySWQiOiJBMzZOQ1FRRDhKMlI1SCIsInRlcm1pbmFsU29mdHdhcmVOYW1lIjoid2ViYXBwIn0sIm5iZiI6MTY1MDE0MTgyMiwiZXhwIjoxNjUwNzQ2NzQyLCJpYXQiOjE2NTAxNDE5NDJ9.FgRtB2xv7rShEZbRjRf6QcKWaHoSflCLHO1QoiE_Hts",
-//         "Content-Type": "application/json;charset=utf-8",
-//         "Sec-Fetch-Dest": "empty",
-//         "Sec-Fetch-Mode": "cors",
-//         "Sec-Fetch-Site": "cross-site"
-//     },
-//     "referrer": "https://trans-logistics-eu.amazon.com/",
-//     "body": "{\"requester\":{\"system\":\"YMSWebApp\"}}",
-//     "method": "POST",
-//     "mode": "cors"
-// })
-// .then((response) => response.json())
-// .then((data) => {console.log(data);return  data})
-//https://trans-logistics-eu.amazon.com/fmc/api/v2/execution/load/112V2DT4F/mapFeature/stops
-
+  // let se= await fetch("https://sesamegateservice-eu-ext.amazon.com/listLoadsWithInYardDestinationMetadata", {
+  //     "credentials": "omit",
+  //     "headers": {
+  //         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101 Firefox/91.0",
+  //         "Accept": "application/json, text/plain, */*",
+  //         "Accept-Language": "en-US,en;q=0.5",
+  //         "Content-Type": "application/json;charset=utf-8",
+  //         "x-amz-yardtech-sesame-sessionToken": "eyJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE2NTAxNDAwODEsImlzcyI6IllNUy0xLjAiLCJjb250ZXh0Ijp7ImFjY291bnRJZCI6IkEyS0VORUw0VjM2WDg0IiwieWFyZCI6InlhcmQiLCJ1c2VyVHlwZSI6IndlYmFwcCIsInVzZXJOYW1lIjoiYW1tYWVzdHJAYW1hem9uLmNvbSIsInVzZXJJZCI6IkEzNk5DUVFEOEoyUjVIIiwidGVybWluYWxTb2Z0d2FyZU5hbWUiOiJHRU0ifSwiZXhwIjoxNjUwNzQ1MDAxLCJpYXQiOjE2NTAxNDAyMDF9.eWSNtF3yIQj45ga-H3YR_OK5RaX9A3hWvSTmlV37nXs",
+  //         "Sec-Fetch-Dest": "empty",
+  //         "Sec-Fetch-Mode": "cors",
+  //         "Sec-Fetch-Site": "same-site"
+  //     },
+  //     "referrer": "https://trans-logistics-eu.amazon.com/",
+  //     "body": "{\"buildingCode\":\"DQA2\",\"yardId\":\"amzn1.ydlr.yard.EU.d2b62273-28f4-95f8-9dc6-4891f7115472\",\"startTime\":1650053807,\"endTime\":1650226607,\"context\":{\"requester\":\"GEM\",\"login\":\"ammaestr@amazon.com\",\"accountId\":\"A2KENEL4V36X84\",\"customerId\":\"A36NCQQD8J2R5H\"}}",
+  //     "method": "POST",
+  //     "mode": "cors"
+  // })
+  // let se =await fetch("https://jwmjkz3dsd.execute-api.eu-west-1.amazonaws.com/call/getYardStateWithPendingMoves", {
+  //     "credentials": "omit",
+  //     "headers": {
+  //         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101 Firefox/91.0",
+  //         "Accept": "application/json, text/plain, */*",
+  //         "Accept-Language": "en-US,en;q=0.5",
+  //         "api": "getYardStateWithPendingMoves",
+  //         "method": "POST",
+  //         "token": "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJZTVMtMS4wIiwiY29udGV4dCI6eyJhY2NvdW50SWQiOiJBMktFTkVMNFYzNlg4NCIsInlhcmQiOiJEUUEyIiwidXNlclR5cGUiOiJ3ZWJhcHAiLCJ1c2VyTmFtZSI6ImFtbWFlc3RyQGFtYXpvbi5jb20iLCJ1c2VySWQiOiJBMzZOQ1FRRDhKMlI1SCIsInRlcm1pbmFsU29mdHdhcmVOYW1lIjoid2ViYXBwIn0sIm5iZiI6MTY1MDE0MTgyMiwiZXhwIjoxNjUwNzQ2NzQyLCJpYXQiOjE2NTAxNDE5NDJ9.FgRtB2xv7rShEZbRjRf6QcKWaHoSflCLHO1QoiE_Hts",
+  //         "Content-Type": "application/json;charset=utf-8",
+  //         "Sec-Fetch-Dest": "empty",
+  //         "Sec-Fetch-Mode": "cors",
+  //         "Sec-Fetch-Site": "cross-site"
+  //     },
+  //     "referrer": "https://trans-logistics-eu.amazon.com/",
+  //     "body": "{\"requester\":{\"system\":\"YMSWebApp\"}}",
+  //     "method": "POST",
+  //     "mode": "cors"
+  // })
+  // .then((response) => response.json())
+  // .then((data) => {console.log(data);return  data})
+  //https://trans-logistics-eu.amazon.com/fmc/api/v2/execution/load/112V2DT4F/mapFeature/stops
 }
-
-
+export async function truckData(vrid,field,value){
+  let listado=await getLocalStorage()
+  listado[listado.findIndex((ele)=>ele[FIELD.VRID]===vrid)][field]=value
+  saveLocalStorage(listado)
+}

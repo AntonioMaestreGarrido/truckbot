@@ -18,6 +18,7 @@ export async function fetchSesameData() {
       return listado
   }
   export async function fetchSscData() {
+      
      let scc=await fetch("http://localhost:3001/scc")
                                 
                                 
@@ -25,7 +26,7 @@ export async function fetchSesameData() {
       .then((data) => {
           
           let scc=data
-          console.log(scc)
+         
           return scc
         
       })
@@ -63,6 +64,8 @@ export async function fetchSesameData() {
   //http://localhost:3001/getYardInfo/
 
   export async function fetchYardData() {
+
+
     let scc=await fetch("http://localhost:3001/getYardInfo")
                                
                                

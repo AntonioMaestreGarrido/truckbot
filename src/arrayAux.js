@@ -26,6 +26,8 @@ export function refineArray(listado) {
   });
 
   // se añaden columnas para "arrived""logged"y dock
+  addColumn(listado,1 , "Actual", "-");
+  addColumn(listado, undefined, "Volume", "-");
   addColumn(listado, undefined, "Arrived", false);
   addColumn(listado, undefined, "Logged", false);
   addColumn(listado, undefined, "Dock", "-");
@@ -54,9 +56,9 @@ export function addColumn(
   console.log("array[]",array[0].length)
   console.log("col=",col );
   console.log(array)
-  array[0].splice(col, 1, header);
+  array[0].splice(col,0,  header);
   for (let i = 1; i < array.length; i++) {
-    array[i].splice(col, 1, defecto);
+    array[i].splice(col,0,  defecto);
   }
   console.log(array);
 }

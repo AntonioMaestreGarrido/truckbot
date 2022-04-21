@@ -12,7 +12,11 @@ th{
 #tableContainer td,th{
     border: solid black 2px;
     padding: 2px;
+    
 
+}
+td{
+    text-align: center;
 }
 input{
     margin: auto;
@@ -28,5 +32,13 @@ input{
 th input{
     margin-bottom:4px;
     
+}
+.ok{
+    color: green;
+    background-image: "./src/img/check.png";
+}
+.ok::after{
+    content: icon
+    content: icon("./src/img/check.png");
 }
 
