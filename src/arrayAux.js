@@ -68,3 +68,19 @@ export    function arrayRemove(arr, value) {
       return ele != value; 
   });
 }
+export function getEpoch(ele){
+  
+  let dt=ele[1].split("-")
+    
+  let horaArray=ele[0].split(/:| /)
+  if(horaArray[3]==="PM"){horaArray[0]=parseInt(parseInt(horaArray[0])+12)}
+
+
+  
+  
+  let d= new Date(dt[0],parseInt(dt[1])-1,dt[2],horaArray[0],horaArray[1])
+  
+
+  return d.getTime()
+
+}

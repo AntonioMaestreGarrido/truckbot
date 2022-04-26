@@ -5,7 +5,7 @@
 //     .then((data) => {
 
 import { refineArray } from "./src/arrayAux.js";
-import { renderList } from "./src/renderList.js";
+import { renderList, testTime, testTruckAnimation } from "./src/renderList.js";
 import {
   fetchMmatTruckData,
   fetchMmatTruckStopsData,
@@ -22,14 +22,14 @@ const SITE = {
   name: "DQA2",
 };
 export const FIELD = {
-  EXPECTED:1,
-  ACTION:3,
+  EXPECTED: 1,
+  ACTION: 3,
   VRID: 4,
 
   VOLUME: 7,
   ARRIVED: 8,
   LOGGED: 9,
-  DOCK:10
+  DOCK: 10,
 };
 const CABECERA = [
   "Time",
@@ -46,9 +46,10 @@ const CABECERA = [
 document.getElementById("tableContainer").style.cursor = "pointer";
 
 let listado;
-//localStorage.clear();
-//checkLocalStorage();
-//[["Time","Date","Action","VRID","Lane","Reason","Arrived","Logged","Dock"],["2:00:00 AM","2022-04-18","Pickup","1148T5NLW","DQA2->MAD7","ATSBagsCartsMixed",false,false,"-"],["1:00:00 AM","2022-04-18","Dropoff","1131RCF5Q","MAD6->DQA2","ATSOutbound",false,false,"-"],["2:45:00 AM","2022-04-18","Dropoff","1139K535C","MAD8->DQA2","ATSOutbound",false,false,"-"],["3:45:00 AM","2022-04-18","Dropoff","11112FZWB","RMU1->DQA2","ATSOutbound",false,false,"-"],["6:40:00 AM","2022-04-18","Dropoff","113PKMLD1","MAD8->DQA2","ATSOutbound",false,false,"-"],["7:00:00 AM","2022-04-18","Dropoff","11353FL3V","MAD6->DQA2","ATSOutbound",false,false,"-"],["7:15:00 AM","2022-04-18","Dropoff","116JWPMNK","MAD9->DQA2","ATSOutbound",false,false,"-"],["7:40:00 AM","2022-04-18","Dropoff","112PR3XG8","MAD8->DQA2","ATSOutbound",false,false,"-"],["10:00:00 AM","2022-04-18","Pickup","111PBVPSZ","DQA2->MAD7","ATSBagsCartsMixed",false,false,"-"],["1:30:00 PM","2022-04-18","Pickup","116GCKN5T","DQA2->MAD4","TransfersEmptyPalletsOB",false,false,"-"],["12:00:00 AM","2022-04-18","Dropoff","112V2DT4F","MAD8->DQA2","ATSOutbound",false,false,"-"],["9:15:00 AM","2022-04-18","Pickup","11684ZT76","DQA2->EQA2","ATSVirtualTruck",false,false,"-"],["5:00:00 PM","2022-04-17","Dropoff","112GL71GJ","SVQ1->DQA2","ATSOutbound",false,false,"-"],["11:05:00 PM","2022-04-18","Dropoff","11484WWCZ","SVQ1->DQA2","ATSOutbound",false,false,"-"],["1:00:00 AM","2022-04-19","Pickup","115LJR5KB","DQA2->MAD7","TransfersCarts",false,false,"-"],["3:15:00 AM","2022-04-19","Dropoff","111JFNT48","SVQ1->DQA2","ATSOutbound",false,false,"-"],["3:45:00 AM","2022-04-19","Dropoff","112MYZKGN","RMU1->DQA2","ATSOutbound",false,false,"-"],["4:00:00 AM","2022-04-19","Dropoff","115QK2X5D","MAD8->DQA2","ATSOutbound",false,false,"-"]]
+// localStorage.clear();
+// getLocalStorage();
+// [["Time","Date","Action","VRID","Lane","Reason","Arrived","Logged","Dock"],["2:00:00 AM","2022-04-18","Pickup","1148T5NLW","DQA2->MAD7","ATSBagsCartsMixed",false,false,"-"],["1:00:00 AM","2022-04-18","Dropoff","1131RCF5Q","MAD6->DQA2","ATSOutbound",false,false,"-"],["2:45:00 AM","2022-04-18","Dropoff","1139K535C","MAD8->DQA2","ATSOutbound",false,false,"-"],["3:45:00 AM","2022-04-18","Dropoff","11112FZWB","RMU1->DQA2","ATSOutbound",false,false,"-"],["6:40:00 AM","2022-04-18","Dropoff","113PKMLD1","MAD8->DQA2","ATSOutbound",false,false,"-"],["7:00:00 AM","2022-04-18","Dropoff","11353FL3V","MAD6->DQA2","ATSOutbound",false,false,"-"],["7:15:00 AM","2022-04-18","Dropoff","116JWPMNK","MAD9->DQA2","ATSOutbound",false,false,"-"],["7:40:00 AM","2022-04-18","Dropoff","112PR3XG8","MAD8->DQA2","ATSOutbound",false,false,"-"],["10:00:00 AM","2022-04-18","Pickup","111PBVPSZ","DQA2->MAD7","ATSBagsCartsMixed",false,false,"-"],["1:30:00 PM","2022-04-18","Pickup","116GCKN5T","DQA2->MAD4","TransfersEmptyPalletsOB",false,false,"-"],["12:00:00 AM","2022-04-18","Dropoff","112V2DT4F","MAD8->DQA2","ATSOutbound",false,false,"-"],["9:15:00 AM","2022-04-18","Pickup","11684ZT76","DQA2->EQA2","ATSVirtualTruck",false,false,"-"],["5:00:00 PM","2022-04-17","Dropoff","112GL71GJ","SVQ1->DQA2","ATSOutbound",false,false,"-"],["11:05:00 PM","2022-04-18","Dropoff","11484WWCZ","SVQ1->DQA2","ATSOutbound",false,false,"-"],["1:00:00 AM","2022-04-19","Pickup","115LJR5KB","DQA2->MAD7","TransfersCarts",false,false,"-"],["3:15:00 AM","2022-04-19","Dropoff","111JFNT48","SVQ1->DQA2","ATSOutbound",false,false,"-"],["3:45:00 AM","2022-04-19","Dropoff","112MYZKGN","RMU1->DQA2","ATSOutbound",false,false,"-"],["4:00:00 AM","2022-04-19","Dropoff","115QK2X5D","MAD8->DQA2","ATSOutbound",false,false,"-"]]
+//saveLocalStorage([["Time","Date","Action","VRID","Lane","Reason","Arrived","Logged","Dock"],["2:00:00 AM","2022-04-18","Pickup","1148T5NLW","DQA2->MAD7","ATSBagsCartsMixed",false,false,"-"],["1:00:00 AM","2022-04-18","Dropoff","1131RCF5Q","MAD6->DQA2","ATSOutbound",false,false,"-"],["2:45:00 AM","2022-04-18","Dropoff","1139K535C","MAD8->DQA2","ATSOutbound",false,false,"-"],["3:45:00 AM","2022-04-18","Dropoff","11112FZWB","RMU1->DQA2","ATSOutbound",false,false,"-"],["6:40:00 AM","2022-04-18","Dropoff","113PKMLD1","MAD8->DQA2","ATSOutbound",false,false,"-"],["7:00:00 AM","2022-04-18","Dropoff","11353FL3V","MAD6->DQA2","ATSOutbound",false,false,"-"],["7:15:00 AM","2022-04-18","Dropoff","116JWPMNK","MAD9->DQA2","ATSOutbound",false,false,"-"],["7:40:00 AM","2022-04-18","Dropoff","112PR3XG8","MAD8->DQA2","ATSOutbound",false,false,"-"],["10:00:00 AM","2022-04-18","Pickup","111PBVPSZ","DQA2->MAD7","ATSBagsCartsMixed",false,false,"-"],["1:30:00 PM","2022-04-18","Pickup","116GCKN5T","DQA2->MAD4","TransfersEmptyPalletsOB",false,false,"-"],["12:00:00 AM","2022-04-18","Dropoff","112V2DT4F","MAD8->DQA2","ATSOutbound",false,false,"-"],["9:15:00 AM","2022-04-18","Pickup","11684ZT76","DQA2->EQA2","ATSVirtualTruck",false,false,"-"],["5:00:00 PM","2022-04-17","Dropoff","112GL71GJ","SVQ1->DQA2","ATSOutbound",false,false,"-"],["11:05:00 PM","2022-04-18","Dropoff","11484WWCZ","SVQ1->DQA2","ATSOutbound",false,false,"-"],["1:00:00 AM","2022-04-19","Pickup","115LJR5KB","DQA2->MAD7","TransfersCarts",false,false,"-"],["3:15:00 AM","2022-04-19","Dropoff","111JFNT48","SVQ1->DQA2","ATSOutbound",false,false,"-"],["3:45:00 AM","2022-04-19","Dropoff","112MYZKGN","RMU1->DQA2","ATSOutbound",false,false,"-"],["4:00:00 AM","2022-04-19","Dropoff","115QK2X5D","MAD8->DQA2","ATSOutbound",false,false,"-"]])
 setListeners();
 
 export async function getLocalStorage() {
@@ -69,7 +70,7 @@ export async function getLocalStorage() {
 export function saveLocalStorage(array) {
   if (Array.isArray(array)) {
     localStorage.setItem("listadoCamiones", JSON.stringify(array));
-//    console.log(localStorage.listadoCamiones);
+    //    console.log(localStorage.listadoCamiones);
   }
 }
 async function handleRefreshSesameButton() {
@@ -80,18 +81,20 @@ async function handleRefreshSesameButton() {
   // console.log(oldList.some(row=>row.includes( "VRID")))
 
   let newLista = refineArray(await fetchSesameData());
-
-  newLista.forEach((ele) => {
-    console.log("ele[FIELD.VRID]",ele[FIELD.VRID],FIELD.VRID)
-    let vrid = ele[FIELD.VRID];
-
-    if (!oldList.some((row) => row.includes(vrid))) {
-      oldList.push(ele);
-      console.log("se ha incluido " + vrid);
-    } else {
-      console.log("no se ha incluido:" + vrid);
-    }
-  });
+  if (oldList === undefined) {
+    oldList = [...newLista];
+  } else {
+    newLista.forEach((ele) => {
+      console.log("ele[FIELD.VRID]", ele[FIELD.VRID], FIELD.VRID);
+      let vrid = ele[FIELD.VRID];
+      if (!oldList.some((row) => row.includes(vrid))) {
+        oldList.push(ele);
+        console.log("se ha incluido " + vrid);
+      } else {
+        console.log("no se ha incluido:" + vrid);
+      }
+    });
+  }
   saveLocalStorage(oldList);
   renderList(oldList);
 
@@ -130,43 +133,61 @@ function setListeners() {
     .getElementById("clear")
     .addEventListener("click", (e) => localStorage.clear());
 
-  testSCC;
-  //testNotification
+  document
+    .getElementById("testTruckAnimation")
+    .addEventListener("click", (e) => testTruckAnimation(3, 1, e));
+  document
+    .getElementById("testTime")
+    .addEventListener("click", (e) => testTime());
+
+  //testSCC;
+  //testTruckAnimation
   //testYard
 }
 async function testYard() {
-  truckData("113NSNYB4",FIELD.DOCK,"IBO 01")
+  //truckData("113NSNYB4", FIELD.DOCK, "IBO 01");
   let data = await fetchYardData();
   //console.log(data);
   let listado = await getLocalStorage();
   data.forEach((dock) => {
     //console.log(dock)
- if (dock.yardAssets.length>0){
-  dock.yardAssets.forEach((dock)=>{if (dock.load.identifiers[0]!==null){
-    truckData(dock.load.identifiers[0].identifier,FIELD.DOCK,dock.code)
-    console.log(dock.load.identifiers[0].identifier)}})
-  //console.log(dock.code,dock.yardAssets[0].load.identifiers[0].identifier)
-  //console.log(dock.code,dock.yardAssets)[1].load.identifiers[0].identifier
-
- }
+    if (dock.yardAssets.length > 0) {
+      console.log(dock);
+      let dockCode = dock.code;
+      dock.yardAssets.forEach((dock) => {
+        if (dock.load.identifiers[0] !== null) {
+          console.log(dock.load.identifiers[0].identifier);
+          listado = truckData(
+            listado,
+            dock.load.identifiers[0].identifier,
+            FIELD.DOCK,
+            dockCode
+          );
+        }
+      });
+      //console.log(dock.code,dock.yardAssets[0].load.identifiers[0].identifier)
+      //console.log(dock.code,dock.yardAssets)[1].load.identifiers[0].identifier
+    }
   });
+  saveLocalStorage(listado);
+  renderList(listado)
 }
 async function testArrive() {
-  let test = [
-    "7:00:00 AM",
-    "7:00:00 AM",
-    "2022-04-21",
-    "Dropoff",
-    "114BFJQXK",
-    "MAD6->DQA2",
-    "ATSOutbound",
-    "-",
-    false,
-    false,
-    "-",
-  ];
+  // let test = [
+  //   "7:00:00 AM",
+  //   "7:00:00 AM",
+  //   "2022-04-21",
+  //   "Dropoff",
+  //   "114BFJQXK",
+  //   "MAD6->DQA2",
+  //   "ATSOutbound",
+  //   "-",
+  //   false,
+  //   false,
+  //   "-",
+  // ];
   let listado = await getLocalStorage();
- // listado.push(test);
+  // listado.push(test);
   saveLocalStorage(listado);
   // listado.forEach(async (ele)=>{
   //   if(!ele[ARRIVED]){
@@ -186,58 +207,68 @@ async function testArrive() {
     .forEach((ele) => {
       listado.forEach((e) => {
         // console.log(ele);
-        //console.log(ele[0], e[FIELD.VRID]);
+        console.log(ele[0], e[FIELD.VRID]);
 
         if (e.includes(ele[0])) {
-          console.log(`Vris encontrado ${ele[1]} con ${ele[6]} paquetes`);
-          if (!e[FIELD.ARRIVED] && ele[2]==="In Yard") {
+          console.log(`Vris encontrado ${ele[0]} con ${ele[6]} paquetes`);
+          if (!e[FIELD.ARRIVED] && ele[2] === "In Yard") {
             e[FIELD.ARRIVED] = true;
-            sendNotification(e)
+            sendNotification(e);
           }
           e[FIELD.VOLUME] = ele[6];
-          e[FIELD.EXPECTED]=ele[5]
+          e[FIELD.EXPECTED] = ele[5];
         }
       });
     });
 
   listado.forEach(async (camion) => {
-    if (!camion[FIELD.ARRIVED]||!camion[FIELD.LOGGED]) {
+    if (!camion[FIELD.ARRIVED] || !camion[FIELD.LOGGED]) {
       let vrid = camion[FIELD.VRID];
 
       let data = await fetchMmatTruckStopsData(camion[FIELD.VRID]);
       //console.log(ele[VRID],data[SITE.name])
       data.forEach((ele) => {
-        console.log(ele.timelineEvent.title)
-        if (ele.timelineEvent.title === SITE.name) {
+        console.log(ele.timelineEvent.title);
+        if (
+          ele.timelineEvent.title === SITE.name &&
+          ele.timelineEvent.stopActions[0].events > 0
+        ) {
           //console.log(vrid,ele.timelineEvent.stopActions[0].events)
           let events = ele.timelineEvent.stopActions[0].events;
-
           events.forEach((e) => {
             if (e.localizableDescription.enumValue === "CHECKED_IN") {
-              if(e.eventSource==="YMS"){
-                camion[FIELD.LOGGED]=true
-                camion[FIELD.ARRIVED]=true
-                console.log(`Camion ${vrid} metido en el sistema a las ${new Date( e.timeAndFacilityTimeZone.instant)}` )
-                
-              //console.log(vrid, e, new Date(e.timeAndFacilityTimeZone.instant));
+              if (e.eventSource === "YMS") {
+                camion[FIELD.LOGGED] = true;
+                camion[FIELD.ARRIVED] = true;
+                console.log(
+                  `Camion ${vrid} metido en el sistema a las ${new Date(
+                    e.timeAndFacilityTimeZone.instant
+                  )}`
+                );
+
+                //console.log(vrid, e, new Date(e.timeAndFacilityTimeZone.instant));
+              }
+              if (e.eventSource === "MOBILE_GEOFENCED") {
+                camion[FIELD.ARRIVED] = true;
+                sendNotification(camion);
+                console.log(camion);
+                console.log(
+                  `Camion ${vrid} marca llegada a las ${new Date(
+                    e.timeAndFacilityTimeZone.instant
+                  )}`
+                );
+              }
             }
-              if(e.eventSource==="MOBILE_GEOFENCED"){
-                camion[FIELD.ARRIVED]=true
-                sendNotification(camion)
-                console.log(camion)
-                console.log(`Camion ${vrid} marca llegada a las ${new Date( e.timeAndFacilityTimeZone.instant)}` )
-              } 
-            
-          }
-        })
-        //[0].timelineEvent.title
-        //timelineEvent.stopActions[0].events
-      }
-    })
-  }
-  saveLocalStorage(listado);
-  renderList(listado);
-})}
+          });
+          //[0].timelineEvent.title
+          //timelineEvent.stopActions[0].events
+        }
+      });
+    }
+    saveLocalStorage(listado);
+    renderList(listado);
+  });
+}
 
 // borra el local storage y carga listado desde el sesame
 async function deleteTrucks(e) {
@@ -323,8 +354,10 @@ async function testfecth() {
   // .then((data) => {console.log(data);return  data})
   //https://trans-logistics-eu.amazon.com/fmc/api/v2/execution/load/112V2DT4F/mapFeature/stops
 }
-export async function truckData(vrid,field,value){
-  let listado=await getLocalStorage()
-  listado[listado.findIndex((ele)=>ele[FIELD.VRID]===vrid)][field]=value
-  saveLocalStorage(listado)
+export function truckData(lista, vrid, field, value) {
+  let index = lista.findIndex((ele) => ele[FIELD.VRID] === vrid);
+  if (index !== -1) {
+    lista[index][field] = value;
+  }
+  return lista;
 }
