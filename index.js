@@ -295,13 +295,24 @@ async function testTruck() {
   let listado = await getLocalStorage();
   //const listadoToTest=listado.filter((ele)=>console.log(ele))
   //const stationCommandCenter=await fetchSscData()
-  listado[3][7] = true;
-  console.log(listado);
-  renderList(
-    listado.filter((ele, i) => ele[FIELD.ARRIVED] === false || i === 0)
-  );
+  //7 arrr 8 lo
+for (let i = 1; i < listado.length; i++) {
+  // listado[i][6]=false
+  //  listado[i][7]=false
+}
+listado[0][7]="Logged"
+let row=Math.floor(Math.random()*listado.length)+1
+let columns=Math.ceil(Math.random() *2)+5
+console.log(row,columns)
+console.log(listado[row][columns])
+//listado[ ][ ]=false
+  
+listado[row][columns]=!listado[row][columns]
+console.table(listado)
+  renderList(listado)
+   
 
-  testfecth();
+ 
 }
 async function testfecth() {
   let listado = await checkLocalStorage();

@@ -80,12 +80,12 @@ th input{
     height: 25px;
     left: -200px;
     top: 200px;
-    transition:2s all ease-in-out 4s;
+    transition:0.5s all ease-in-out 4s;
 }
 .drawTruck{
     position: absolute;
     height: 25px;
-    transition:2s all ease-in-out 4s;
+    transition:4s all ease-in-out 1s;
     left: -200px;
     top: 200px;
 

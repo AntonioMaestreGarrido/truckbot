@@ -54,7 +54,7 @@ export function renderList(listado) {
     }
     cuerpo.appendChild(fila);
     fila.setAttribute("VRID", listado[j][4]);
-    
+
   }
   cuerpo.addEventListener("dblclick", (e) => selectSimilar(e));
   tabla.appendChild(cabecera);
@@ -63,7 +63,7 @@ export function renderList(listado) {
 
   //**********************************test******************* */
   //listado[3][6] = true
-  console.log(listado)
+  
   container.appendChild(tabla);
   renderIcons(listado)
   createTruckDraw(listado)
@@ -115,9 +115,7 @@ async function sortListado(i) {
   saveLocalStorage(listado)
   renderList(listado);
 }
-export async function getVolume() {
-  let scc = await fetchSscData
-}
+
 export function testTruckAnimation() {
   let t = createTruckDraw("www")
   let a = Math.floor(Math.random() * 19)
@@ -138,15 +136,15 @@ export function TruckAnimate(camion, row, posicion) {
   // posicion=3
 
 
-  console.log("fila:", row)
+  
   const filas = document.querySelectorAll("tbody tr")
   const fila = filas[row]
 
   const position = fila.getBoundingClientRect()
   //const camion = truck
-  console.log(camion)
+  
   const camionStyle = getComputedStyle(camion)
-  console.log(parseInt(camionStyle.width))
+  
 
   let top = Math.floor(position.top)
   let left
@@ -173,71 +171,77 @@ export function TruckAnimate(camion, row, posicion) {
 
   camion.style.left = `${left}px`
   camion.style.top = `${top}px`
-  console.log(getComputedStyle(camion).top)
+  
 
 
 
 
 }
 function createTruckDraw(listado) {
-  listado.filter((ele,index)=>index>0).forEach((camion,index)=>{
-    let vrid=camion[4]
-    if(document.querySelectorAll(`#${vrid}`).length<1)
-    let truck = document.querySelector("#testTruck").cloneNode(true)
-    truck.id = vrid
-    document.querySelector("#trucksDrawsContainer").appendChild(truck)
-    let posicion=0
-    if(camion[FIELD.ARRIVED]){posicion=1}
-    if(camion[FIELD.LOGGED]){posicion=2}
+  let truck
+  listado.filter((ele, index) => index > 0).forEach((camion, index) => {
+    let vrid = camion[3]// cambiar TEST
     
-    TruckAnimate(truck,index,posicion)
-    console.log(truck)
-  
 
-  })
-  
+    if (!document.getElementById(vrid)) {
+      truck = document.querySelector("#testTruck").cloneNode(true)
+      truck.id = vrid
+      document.querySelector("#trucksDrawsContainer").appendChild(truck)
+    } else { truck = document.getElementById(vrid) }
+    let posicion = 0
+    
+    if (camion[FIELD.ARRIVED - 2]) { posicion = 1 } //changue test
+    if (camion[FIELD.LOGGED - 2]) { posicion = 2 }
+
+    TruckAnimate(truck, index, posicion)
+    
+  }
+
+
+  )
+
 }
 
 function renderIcons() {
 
   const list = document.querySelectorAll("td.Arrived,td.Logged")
-  list.forEach((ele) => { 
-    let value = ele.innerHTML; 
+  list.forEach((ele) => {
+    let value = ele.innerHTML;
     console.log(value)
-    let style=getComputedStyle(ele)
-    if(value==="true"){
+    let style = getComputedStyle(ele)
+    if (value === "true") {
       ele.classList.remove("checkNotOK")
       ele.classList.add("checkOK")
-    }else{
+    } else {
       ele.classList.remove("checkOK")
       ele.classList.add("checkNotOK")
 
     }
-    ele.innerHTML=""
+    ele.innerHTML = ""
   })
 
 
   //document.querySelectorAll("tr").forEach((ele) => console.log(ele.querySelector(".Logged")))
 }
-export async function testTime(){
-  let listado=await getLocalStorage()
+export async function testTime() {
+  let listado = await getLocalStorage()
   console.log(listado)
-  listado.filter((ele,i)=>i>0).forEach((ele)=>{
+  listado.filter((ele, i) => i > 0).forEach((ele) => {
     console.log(getEpoch(ele))
 
-    
-    let dt=ele[1].split("-")
-    
-    let horaArray=ele[0].split(/:| /)
-    if(horaArray[3]==="PM"){horaArray[0]=parseInt(parseInt(horaArray[0])+12)}
+
+    let dt = ele[1].split("-")
+
+    let horaArray = ele[0].split(/:| /)
+    if (horaArray[3] === "PM") { horaArray[0] = parseInt(parseInt(horaArray[0]) + 12) }
 
 
-    
-    
-    let d= new Date(dt[0],parseInt(dt[1])-1,dt[2],horaArray[0],horaArray[1])
- 
-    
-    
+
+
+    let d = new Date(dt[0], parseInt(dt[1]) - 1, dt[2], horaArray[0], horaArray[1])
+
+
+
   })
 
 }
