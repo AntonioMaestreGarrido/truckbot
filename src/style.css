@@ -90,6 +90,9 @@ th input{
     top: 200px;
 
 }
+#map { height: 40vw;
+    width: 40vw;
+border: solid black 2px; }
 
 /* .ok::after{
     content: icon

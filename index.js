@@ -14,6 +14,7 @@ import {
   fetchYardData,
 } from "./src/sesameGate.js";
 import { sendNotification } from "./src/noti.js";
+import { testMap } from "./src/maps.js";
 
 //listado de constantes que definen la posicion en el array
 const SITE = {
@@ -139,6 +140,9 @@ function setListeners() {
   document
     .getElementById("testTime")
     .addEventListener("click", (e) => testTime());
+    document
+    .getElementById("testMap")
+    .addEventListener("click", (e) => testMap());
 
   //testSCC;
   //testTruckAnimation
