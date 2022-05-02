@@ -13,7 +13,7 @@ import {
   fetchSscData,
   fetchYardData,
 } from "./src/sesameGate.js";
-import { sendNotification } from "./src/noti.js";
+import { sendNotification, writeNotiHistory } from "./src/noti.js";
 import { testMap } from "./src/maps.js";
 
 //listado de constantes que definen la posicion en el array
@@ -53,7 +53,7 @@ let listado;
 //saveLocalStorage([["Time","Date","Action","VRID","Lane","Reason","Arrived","Logged","Dock"],["2:00:00 AM","2022-04-18","Pickup","1148T5NLW","DQA2->MAD7","ATSBagsCartsMixed",false,false,"-"],["1:00:00 AM","2022-04-18","Dropoff","1131RCF5Q","MAD6->DQA2","ATSOutbound",false,false,"-"],["2:45:00 AM","2022-04-18","Dropoff","1139K535C","MAD8->DQA2","ATSOutbound",false,false,"-"],["3:45:00 AM","2022-04-18","Dropoff","11112FZWB","RMU1->DQA2","ATSOutbound",false,false,"-"],["6:40:00 AM","2022-04-18","Dropoff","113PKMLD1","MAD8->DQA2","ATSOutbound",false,false,"-"],["7:00:00 AM","2022-04-18","Dropoff","11353FL3V","MAD6->DQA2","ATSOutbound",false,false,"-"],["7:15:00 AM","2022-04-18","Dropoff","116JWPMNK","MAD9->DQA2","ATSOutbound",false,false,"-"],["7:40:00 AM","2022-04-18","Dropoff","112PR3XG8","MAD8->DQA2","ATSOutbound",false,false,"-"],["10:00:00 AM","2022-04-18","Pickup","111PBVPSZ","DQA2->MAD7","ATSBagsCartsMixed",false,false,"-"],["1:30:00 PM","2022-04-18","Pickup","116GCKN5T","DQA2->MAD4","TransfersEmptyPalletsOB",false,false,"-"],["12:00:00 AM","2022-04-18","Dropoff","112V2DT4F","MAD8->DQA2","ATSOutbound",false,false,"-"],["9:15:00 AM","2022-04-18","Pickup","11684ZT76","DQA2->EQA2","ATSVirtualTruck",false,false,"-"],["5:00:00 PM","2022-04-17","Dropoff","112GL71GJ","SVQ1->DQA2","ATSOutbound",false,false,"-"],["11:05:00 PM","2022-04-18","Dropoff","11484WWCZ","SVQ1->DQA2","ATSOutbound",false,false,"-"],["1:00:00 AM","2022-04-19","Pickup","115LJR5KB","DQA2->MAD7","TransfersCarts",false,false,"-"],["3:15:00 AM","2022-04-19","Dropoff","111JFNT48","SVQ1->DQA2","ATSOutbound",false,false,"-"],["3:45:00 AM","2022-04-19","Dropoff","112MYZKGN","RMU1->DQA2","ATSOutbound",false,false,"-"],["4:00:00 AM","2022-04-19","Dropoff","115QK2X5D","MAD8->DQA2","ATSOutbound",false,false,"-"]])
 setListeners();
 
-export async function getLocalStorage() {
+export async function getLocalStorage(key) {
   //localStorage.clear()
   if (!localStorage.listadoCamiones) {
     console.log("listado vacio");
@@ -64,19 +64,230 @@ export async function getLocalStorage() {
     console.log(localStorage.listadoCamiones);
   } else {
     //console.log(localStorage.getItem("listadoCamiones"));
-    listado = JSON.parse(localStorage.getItem("listadoCamiones"));
+    listado = JSON.parse(localStorage.getItem(key));
     return listado;
   }
 }
-export function saveLocalStorage(array) {
+export function saveLocalStorage(key, array) {
+  /*array=[
+    [
+        "Time",
+        "Date",
+        "Action",
+        "VRID",
+        "Lane",
+        "Reason",
+        "Arrived",
+        "Logged",
+        "Dock"
+    ],
+    [
+        "23:10",
+        "2022-04-18",
+        "Pickup",
+        "111PBVPSZ",
+        "DQA2->MAD7",
+        "ATSBagsCartsMixed",
+        true,
+        false,
+        true
+    ],
+    [
+       "22:30",
+        "2022-04-18",
+        "Dropoff",
+        "11484WWCZ",
+        "SVQ1->DQA2",
+        "ATSOutbound",
+        true,
+        false,
+        "-"
+    ],
+    [
+        "09:15",
+        "2022-04-18",
+        "Dropoff",
+        "112V2DT4F",
+        "MAD8->DQA2",
+        "ATSOutbound",
+        true,
+        true,
+        "-"
+    ],
+    [
+        "11:40",
+        "2022-04-18",
+        false,
+        "1131RCF5Q",
+        "MAD6->DQA2",
+        "ATSOutbound",
+        true,
+        true,
+        "-"
+    ],
+    [
+        "21:10",
+        "2022-04-19",
+        "Pickup",
+        "115LJR5KB",
+        "DQA2->MAD7",
+        "TransfersCarts",
+        true,
+        true,
+        "-"
+    ],
+    [
+        "00:15",
+        "2022-04-18",
+        "Pickup",
+        "116GCKN5T",
+        "DQA2->MAD4",
+        "TransfersEmptyPalletsOB",
+        true,
+        false,
+        "-"
+    ],
+    [
+        "10:15",
+        "2022-04-18",
+        false,
+        "1148T5NLW",
+        "DQA2->MAD7",
+        "ATSBagsCartsMixed",
+        true,
+        false,
+        "-"
+    ],
+    [
+        "01:50",
+        "2022-04-18",
+        "Dropoff",
+        "1139K535C",
+        "MAD8->DQA2",
+        "ATSOutbound",
+        false,
+        false,
+        "-"
+    ],
+    [
+        "02:00",
+        "2022-04-19",
+        "Dropoff",
+        "111JFNT48",
+        "SVQ1->DQA2",
+        "ATSOutbound",
+        true,
+        false,
+        "-"
+    ],
+    [
+        "02:00",
+        "2022-04-18",
+        "Dropoff",
+        "11112FZWB",
+        "RMU1->DQA2",
+        "ATSOutbound",
+        false,
+        true,
+        "-"
+    ],
+    [
+        "03:00",
+        "2022-04-19",
+        false,
+        "112MYZKGN",
+        "RMU1->DQA2",
+        "ATSOutbound",
+        true,
+        true,
+        "-"
+    ],
+    [
+        "03:00",
+        "2022-04-19",
+        "Dropoff",
+        "115QK2X5D",
+        "MAD8->DQA2",
+        "ATSOutbound",
+        false,
+        true,
+        "-"
+    ],
+    [
+        "04:30",
+        "2022-04-17",
+        "Dropoff",
+        "112GL71GJ",
+        "SVQ1->DQA2",
+        "ATSOutbound",
+        true,
+        false,
+        "-"
+    ],
+    [
+        "04:50",
+        "2022-04-18",
+        "Dropoff",
+        "113PKMLD1",
+        "MAD8->DQA2",
+        "ATSOutbound",
+        false,
+        true,
+        true
+    ],
+    [
+        "04:50",
+        "2022-04-18",
+        "Dropoff",
+        "11353FL3V",
+        "MAD6->DQA2",
+        "ATSOutbound",
+        false,
+        true,
+        "-"
+    ],
+    [
+        "04:50",
+        "2022-04-18",
+        "Dropoff",
+        "116JWPMNK",
+        "MAD9->DQA2",
+        "ATSOutbound",
+        true,
+        true,
+        "-"
+    ],
+    [
+        "04:50",
+        "2022-04-18",
+        "Dropoff",
+        "112PR3XG8",
+        "MAD8->DQA2",
+        "ATSOutbound",
+        true,
+        false,
+        "-"
+    ],
+    [
+        "04:50",
+        "2022-04-18",
+        "Pickup",
+        "11684ZT76",
+        "DQA2->EQA2",
+        "ATSVirtualTruck",
+        true,
+        true,
+        "-"
+    ]
+]*/
   if (Array.isArray(array)) {
-    localStorage.setItem("listadoCamiones", JSON.stringify(array));
+    localStorage.setItem(key, JSON.stringify(array));
     //    console.log(localStorage.listadoCamiones);
   }
 }
 async function handleRefreshSesameButton() {
   document.getElementById("tableContainer").classList.add("loader");
-  let oldList = await getLocalStorage();
+  let oldList = await getLocalStorage("listadoCamiones");
 
   // fantastic oneliner to find keys in 2d arrays
   // console.log(oldList.some(row=>row.includes( "VRID")))
@@ -96,7 +307,7 @@ async function handleRefreshSesameButton() {
       }
     });
   }
-  saveLocalStorage(oldList);
+  saveLocalStorage("listadoCamiones", oldList);
   renderList(oldList);
 
   document.getElementById("tableContainer").classList.remove("loader");
@@ -139,10 +350,11 @@ function setListeners() {
     .addEventListener("click", (e) => testTruckAnimation(3, 1, e));
   document
     .getElementById("testTime")
-    .addEventListener("click", (e) => testTime());
-    document
+    .addEventListener("click", (e) => addNotiHistory("Esta es la septima notificacion de prueba"));
+  document
     .getElementById("testMap")
     .addEventListener("click", (e) => testMap());
+  document.getElementById("startButton").addEventListener("change", (e) => handleStartButton(e))
 
   //testSCC;
   //testTruckAnimation
@@ -152,7 +364,7 @@ async function testYard() {
   //truckData("113NSNYB4", FIELD.DOCK, "IBO 01");
   let data = await fetchYardData();
   //console.log(data);
-  let listado = await getLocalStorage();
+  let listado = await getLocalStorage("listadoCamiones");
   data.forEach((dock) => {
     //console.log(dock)
     if (dock.yardAssets.length > 0) {
@@ -173,7 +385,7 @@ async function testYard() {
       //console.log(dock.code,dock.yardAssets)[1].load.identifiers[0].identifier
     }
   });
-  saveLocalStorage(listado);
+  saveLocalStorage("listadoCamiones", listado);
   renderList(listado)
 }
 async function testArrive() {
@@ -190,9 +402,9 @@ async function testArrive() {
   //   false,
   //   "-",
   // ];
-  let listado = await getLocalStorage();
+  let listado = await getLocalStorage("listadoCamiones");
   // listado.push(test);
-  saveLocalStorage(listado);
+  saveLocalStorage("listadoCamiones", listado);
   // listado.forEach(async (ele)=>{
   //   if(!ele[ARRIVED]){
   //     console.log(ele[VRID])
@@ -269,14 +481,14 @@ async function testArrive() {
         }
       });
     }
-    saveLocalStorage(listado);
+    saveLocalStorage("listadoCamiones", listado);
     renderList(listado);
   });
 }
 
 // borra el local storage y carga listado desde el sesame
 async function deleteTrucks(e) {
-  let listado = await getLocalStorage();
+  let listado = await getLocalStorage("listadoCamiones");
   let newListado;
   const checkBoxes = document.querySelectorAll("input");
   checkBoxes.forEach((ele) => {
@@ -291,32 +503,32 @@ async function deleteTrucks(e) {
       });
     }
   });
-  saveLocalStorage(listado);
+  saveLocalStorage("listadoCamiones", listado);
   renderList(listado);
 }
-async function getSCCdata() {}
+async function getSCCdata() { }
 async function testTruck() {
-  let listado = await getLocalStorage();
+  let listado = await getLocalStorage("listadoCamiones");
   //const listadoToTest=listado.filter((ele)=>console.log(ele))
   //const stationCommandCenter=await fetchSscData()
   //7 arrr 8 lo
-for (let i = 1; i < listado.length; i++) {
-  // listado[i][6]=false
-  //  listado[i][7]=false
-}
-listado[0][7]="Logged"
-let row=Math.floor(Math.random()*listado.length)+1
-let columns=Math.ceil(Math.random() *2)+5
-console.log(row,columns)
-console.log(listado[row][columns])
-//listado[ ][ ]=false
-  
-listado[row][columns]=!listado[row][columns]
-console.table(listado)
-  renderList(listado)
-   
+  for (let i = 1; i < listado.length; i++) {
+    // listado[i][6]=false
+    //  listado[i][7]=false
+  }
+  listado[0][7] = "Logged"
+  let row = Math.floor(Math.random() * listado.length) + 1
+  let columns = Math.ceil(Math.random() * 2) + 5
+  console.log(row, columns)
+  console.log(listado[row][columns])
+  //listado[ ][ ]=false
 
- 
+  listado[row][columns] = !listado[row][columns]
+  console.table(listado)
+  renderList(listado)
+
+
+
 }
 async function testfecth() {
   let listado = await checkLocalStorage();
@@ -375,4 +587,31 @@ export function truckData(lista, vrid, field, value) {
     lista[index][field] = value;
   }
   return lista;
+}
+export async function addNotiHistory(newNoti) {
+  let list = await getLocalStorage("notificationsHistory")
+  if (!list) { list = [] }
+
+  list.push(newNoti)
+  saveLocalStorage("notificationsHistory", list)
+  writeNotiHistory(list)
+
+
+}
+function handleStartButton(e) {
+  
+
+  if (e.target.checked) {
+    console.log("START")
+    handleStartButton.start=setInterval(testStart,2000)
+    
+  } else {
+    console.log("STOP")
+    clearInterval(handleStartButton.start)
+
+  }
+
+}
+function testStart(){
+  console.log(new Date().toTimeString())
 }

@@ -1,4 +1,4 @@
-import { FIELD } from "../index.js";
+import { FIELD, getLocalStorage } from "../index.js";
 
 export function sendNotification(ele) {
   //console.log(ele);
@@ -34,4 +34,26 @@ function askFroNoti() {
       console.log(result);
     });
   }
+}
+
+export async function writeNotiHistory(){
+  const list=await getLocalStorage("notificationsHistory")
+  const container=document.getElementById("notificationHistory")
+  if(container.childElementCount===0){
+    for (let i = list.length - 1; i >= 0; i--) {
+      let newP=document.createElement("p")
+      newP.innerText=list[i]
+      newP.classList.add("historicNoti")
+      container.appendChild(newP)
+      
+    }
+  
+  }else{
+    let newP=document.createElement("p")
+    newP.innerText=list[list.length-1]
+    newP.classList.add("historicNoti")
+    container.prepend(newP)
+
+  }
+
 }

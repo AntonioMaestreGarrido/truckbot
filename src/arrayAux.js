@@ -24,6 +24,15 @@ export function refineArray(listado) {
     console.log(ele[4])
     
   });
+  //cambia hora por date
+  listado.forEach(ele => {
+    if(ele[0]!="Time"){
+    ele[0]=new Date(getEpoch(ele))
+    
+
+    console.log(ele[4])
+    }
+  });
 
   // se añaden columnas para "arrived""logged"y dock
   addColumn(listado,1 , "Actual", "-");
@@ -69,6 +78,7 @@ export    function arrayRemove(arr, value) {
   });
 }
 export function getEpoch(ele){
+  console.log(ele)
   
   let dt=ele[1].split("-")
     
