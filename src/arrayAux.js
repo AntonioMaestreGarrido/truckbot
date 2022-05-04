@@ -1,3 +1,5 @@
+import { getLocalStorage } from "../index.js";
+
 export function refineArray(listado) {
   // 1: (9) ['Time', 'Carrier', 'Reason', 'VRID/ISA #', 'Lane', 'Account', 'Planned Location', 'Comment (optional)', 'Action']
   // 2: (8) ['9:15:00 AM', '2022-04-15', 'DUMMY', 'Pickup', 'Scheduled', '1123CMS8F', 'DQA2->AMZL-EQA2-ND', 'ATSVirtualTruck']
@@ -91,6 +93,12 @@ export function getEpoch(ele){
   let d= new Date(dt[0],parseInt(dt[1])-1,dt[2],horaArray[0],horaArray[1])
   
 
-  return d.getTime()
+  return d
 
+}
+// devuelve el numero de columna en un array a partir de la clave
+export async function getCoulmnNum(key){
+  const listado=await getLocalStorage("listadoCamiones")
+
+  return listado.indexOf(key)
 }

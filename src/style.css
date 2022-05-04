@@ -84,10 +84,11 @@ th input{
 #truckLoader {
     z-index: 333;
     position: absolute;
-    
-    top: 20%;
-    width: 50%;
-    height: 50%;
+   display: none;
+    top: 0;
+    height: 100%;
+    width: 100%;
+   
 }
 #testTruck{
     position: absolute;
@@ -125,7 +126,7 @@ th input{
 
 }
 #loading{
-    background-image: url("./imgs/loader.gif");
+
 }
 
 #map { height: 40vw;

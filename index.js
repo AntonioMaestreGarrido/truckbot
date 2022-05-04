@@ -5,7 +5,12 @@
 //     .then((data) => {
 
 import { refineArray } from "./src/arrayAux.js";
-import { renderList, testTime, testTruckAnimation } from "./src/renderList.js";
+import {
+  loading,
+  renderList,
+  testTime,
+  testTruckAnimation,
+} from "./src/renderList.js";
 import {
   fetchMmatTruckData,
   fetchMmatTruckStopsData,
@@ -22,6 +27,7 @@ const SITE = {
   longitude: -4.477451896032319,
   name: "DQA2",
 };
+console.log(document.cookie);
 export const FIELD = {
   EXPECTED: 1,
   ACTION: 3,
@@ -43,7 +49,7 @@ const CABECERA = [
   "Logged",
   "Dock",
 ];
-
+console.log(document.getElementById("truckLoader").style.display);
 document.getElementById("tableContainer").style.cursor = "pointer";
 
 let listado;
@@ -69,224 +75,14 @@ export async function getLocalStorage(key) {
   }
 }
 export function saveLocalStorage(key, array) {
-  /*array=[
-    [
-        "Time",
-        "Date",
-        "Action",
-        "VRID",
-        "Lane",
-        "Reason",
-        "Arrived",
-        "Logged",
-        "Dock"
-    ],
-    [
-        "23:10",
-        "2022-04-18",
-        "Pickup",
-        "111PBVPSZ",
-        "DQA2->MAD7",
-        "ATSBagsCartsMixed",
-        true,
-        false,
-        true
-    ],
-    [
-       "22:30",
-        "2022-04-18",
-        "Dropoff",
-        "11484WWCZ",
-        "SVQ1->DQA2",
-        "ATSOutbound",
-        true,
-        false,
-        "-"
-    ],
-    [
-        "09:15",
-        "2022-04-18",
-        "Dropoff",
-        "112V2DT4F",
-        "MAD8->DQA2",
-        "ATSOutbound",
-        true,
-        true,
-        "-"
-    ],
-    [
-        "11:40",
-        "2022-04-18",
-        false,
-        "1131RCF5Q",
-        "MAD6->DQA2",
-        "ATSOutbound",
-        true,
-        true,
-        "-"
-    ],
-    [
-        "21:10",
-        "2022-04-19",
-        "Pickup",
-        "115LJR5KB",
-        "DQA2->MAD7",
-        "TransfersCarts",
-        true,
-        true,
-        "-"
-    ],
-    [
-        "00:15",
-        "2022-04-18",
-        "Pickup",
-        "116GCKN5T",
-        "DQA2->MAD4",
-        "TransfersEmptyPalletsOB",
-        true,
-        false,
-        "-"
-    ],
-    [
-        "10:15",
-        "2022-04-18",
-        false,
-        "1148T5NLW",
-        "DQA2->MAD7",
-        "ATSBagsCartsMixed",
-        true,
-        false,
-        "-"
-    ],
-    [
-        "01:50",
-        "2022-04-18",
-        "Dropoff",
-        "1139K535C",
-        "MAD8->DQA2",
-        "ATSOutbound",
-        false,
-        false,
-        "-"
-    ],
-    [
-        "02:00",
-        "2022-04-19",
-        "Dropoff",
-        "111JFNT48",
-        "SVQ1->DQA2",
-        "ATSOutbound",
-        true,
-        false,
-        "-"
-    ],
-    [
-        "02:00",
-        "2022-04-18",
-        "Dropoff",
-        "11112FZWB",
-        "RMU1->DQA2",
-        "ATSOutbound",
-        false,
-        true,
-        "-"
-    ],
-    [
-        "03:00",
-        "2022-04-19",
-        false,
-        "112MYZKGN",
-        "RMU1->DQA2",
-        "ATSOutbound",
-        true,
-        true,
-        "-"
-    ],
-    [
-        "03:00",
-        "2022-04-19",
-        "Dropoff",
-        "115QK2X5D",
-        "MAD8->DQA2",
-        "ATSOutbound",
-        false,
-        true,
-        "-"
-    ],
-    [
-        "04:30",
-        "2022-04-17",
-        "Dropoff",
-        "112GL71GJ",
-        "SVQ1->DQA2",
-        "ATSOutbound",
-        true,
-        false,
-        "-"
-    ],
-    [
-        "04:50",
-        "2022-04-18",
-        "Dropoff",
-        "113PKMLD1",
-        "MAD8->DQA2",
-        "ATSOutbound",
-        false,
-        true,
-        true
-    ],
-    [
-        "04:50",
-        "2022-04-18",
-        "Dropoff",
-        "11353FL3V",
-        "MAD6->DQA2",
-        "ATSOutbound",
-        false,
-        true,
-        "-"
-    ],
-    [
-        "04:50",
-        "2022-04-18",
-        "Dropoff",
-        "116JWPMNK",
-        "MAD9->DQA2",
-        "ATSOutbound",
-        true,
-        true,
-        "-"
-    ],
-    [
-        "04:50",
-        "2022-04-18",
-        "Dropoff",
-        "112PR3XG8",
-        "MAD8->DQA2",
-        "ATSOutbound",
-        true,
-        false,
-        "-"
-    ],
-    [
-        "04:50",
-        "2022-04-18",
-        "Pickup",
-        "11684ZT76",
-        "DQA2->EQA2",
-        "ATSVirtualTruck",
-        true,
-        true,
-        "-"
-    ]
-]*/
-  if (Array.isArray(array)) {
+  if (Array) {
     localStorage.setItem(key, JSON.stringify(array));
     //    console.log(localStorage.listadoCamiones);
   }
 }
 async function handleRefreshSesameButton() {
-  document.getElementById("tableContainer").classList.add("loader");
+  //document.getElementById("tableContainer").classList.add("loader");
+  loading(true);
   let oldList = await getLocalStorage("listadoCamiones");
 
   // fantastic oneliner to find keys in 2d arrays
@@ -312,6 +108,7 @@ async function handleRefreshSesameButton() {
 
   document.getElementById("tableContainer").classList.remove("loader");
   //let newLista=[...oldList,...newLista,]
+  loading();
 }
 function setListeners() {
   document
@@ -350,11 +147,15 @@ function setListeners() {
     .addEventListener("click", (e) => testTruckAnimation(3, 1, e));
   document
     .getElementById("testTime")
-    .addEventListener("click", (e) => addNotiHistory("Esta es la septima notificacion de prueba"));
+    .addEventListener("click", (e) =>
+      addNotiHistory("Esta es la septima notificacion de prueba")
+    );
   document
     .getElementById("testMap")
     .addEventListener("click", (e) => testMap());
-  document.getElementById("startButton").addEventListener("change", (e) => handleStartButton(e))
+  document
+    .getElementById("startButton")
+    .addEventListener("change", (e) => handleStartButton(e));
 
   //testSCC;
   //testTruckAnimation
@@ -386,7 +187,7 @@ async function testYard() {
     }
   });
   saveLocalStorage("listadoCamiones", listado);
-  renderList(listado)
+  renderList(listado);
 }
 async function testArrive() {
   // let test = [
@@ -423,13 +224,13 @@ async function testArrive() {
     .forEach((ele) => {
       listado.forEach((e) => {
         // console.log(ele);
-        console.log(ele[0], e[FIELD.VRID]);
+        //console.log(ele[0], e[FIELD.VRID]);
 
         if (e.includes(ele[0])) {
           console.log(`Vris encontrado ${ele[0]} con ${ele[6]} paquetes`);
           if (!e[FIELD.ARRIVED] && ele[2] === "In Yard") {
-            e[FIELD.ARRIVED] = true;
-            sendNotification(e);
+            // e[FIELD.ARRIVED] = true;
+            // sendNotification(e);
           }
           e[FIELD.VOLUME] = ele[6];
           e[FIELD.EXPECTED] = ele[5];
@@ -437,25 +238,36 @@ async function testArrive() {
       });
     });
 
-  listado.forEach(async (camion) => {
+  listado.forEach(async (camion, index) => {
     if (!camion[FIELD.ARRIVED] || !camion[FIELD.LOGGED]) {
       let vrid = camion[FIELD.VRID];
 
       let data = await fetchMmatTruckStopsData(camion[FIELD.VRID]);
       //console.log(ele[VRID],data[SITE.name])
       data.forEach((ele) => {
-        console.log(ele.timelineEvent.title);
         if (
           ele.timelineEvent.title === SITE.name &&
-          ele.timelineEvent.stopActions[0].events > 0
+          ele.timelineEvent.stopActions[0].events.length > 0
         ) {
           //console.log(vrid,ele.timelineEvent.stopActions[0].events)
           let events = ele.timelineEvent.stopActions[0].events;
           events.forEach((e) => {
             if (e.localizableDescription.enumValue === "CHECKED_IN") {
-              if (e.eventSource === "YMS") {
-                camion[FIELD.LOGGED] = true;
-                camion[FIELD.ARRIVED] = true;
+              if (
+                e.eventSource === "YMS" &&
+                listado[index][FIELD.LOGGED] === false
+              ) {
+                console.log(index);
+                console.log(listado[index]);
+                listado[index][FIELD.LOGGED] = true;
+                //listado[index][FIELD.ARRIVED] = true;
+                saveLocalStorage("listadoCamiones", listado);
+                console.log(listado[index]);
+                writeNotiHistory(
+                  `Camion ${vrid} metido en el sistema a las ${new Date(
+                    e.timeAndFacilityTimeZone.instant
+                  )}`
+                );
                 console.log(
                   `Camion ${vrid} metido en el sistema a las ${new Date(
                     e.timeAndFacilityTimeZone.instant
@@ -464,10 +276,22 @@ async function testArrive() {
 
                 //console.log(vrid, e, new Date(e.timeAndFacilityTimeZone.instant));
               }
-              if (e.eventSource === "MOBILE_GEOFENCED") {
-                camion[FIELD.ARRIVED] = true;
-                sendNotification(camion);
+              if (
+                e.eventSource === "MOBILE_GEOFENCED" &&
+                listado[index][FIELD.ARRIVED] === false
+              ) {
+                listado[index][FIELD.ARRIVED] = true;
+                saveLocalStorage("listadoCamiones", listado);
+
                 console.log(camion);
+                if ((listado[index][FIELD.LOGGED] = false)) {
+                  sendNotification(camion);
+                }
+                writeNotiHistory(
+                  `Camion ${vrid} marca llegada a las ${new Date(
+                    e.timeAndFacilityTimeZone.instant
+                  )}`
+                );
                 console.log(
                   `Camion ${vrid} marca llegada a las ${new Date(
                     e.timeAndFacilityTimeZone.instant
@@ -482,18 +306,24 @@ async function testArrive() {
       });
     }
     saveLocalStorage("listadoCamiones", listado);
-    renderList(listado);
   });
+
+  renderList(listado);
+  return true;
 }
 
 // borra el local storage y carga listado desde el sesame
 async function deleteTrucks(e) {
   let listado = await getLocalStorage("listadoCamiones");
+  const listTrackDraws = document.querySelectorAll(".drawTruck");
   let newListado;
   const checkBoxes = document.querySelectorAll("input");
   checkBoxes.forEach((ele) => {
     if (ele.checked) {
       let vridToDelete = ele.parentElement.parentElement.getAttribute("VRID");
+      if (document.getElementById(vridToDelete)) {
+        document.getElementById(vridToDelete).remove();
+      }
 
       listado.forEach((ele, index) => {
         if (ele[FIELD.VRID] == vridToDelete) {
@@ -506,7 +336,7 @@ async function deleteTrucks(e) {
   saveLocalStorage("listadoCamiones", listado);
   renderList(listado);
 }
-async function getSCCdata() { }
+async function getSCCdata() {}
 async function testTruck() {
   let listado = await getLocalStorage("listadoCamiones");
   //const listadoToTest=listado.filter((ele)=>console.log(ele))
@@ -516,19 +346,16 @@ async function testTruck() {
     // listado[i][6]=false
     //  listado[i][7]=false
   }
-  listado[0][7] = "Logged"
-  let row = Math.floor(Math.random() * listado.length) + 1
-  let columns = Math.ceil(Math.random() * 2) + 5
-  console.log(row, columns)
-  console.log(listado[row][columns])
+  listado[0][7] = "Logged";
+  let row = Math.floor(Math.random() * listado.length) + 1;
+  let columns = Math.ceil(Math.random() * 2) + 5;
+  console.log(row, columns);
+  console.log(listado[row][columns]);
   //listado[ ][ ]=false
 
-  listado[row][columns] = !listado[row][columns]
-  console.table(listado)
-  renderList(listado)
-
-
-
+  listado[row][columns] = !listado[row][columns];
+  console.table(listado);
+  renderList(listado);
 }
 async function testfecth() {
   let listado = await checkLocalStorage();
@@ -588,30 +415,22 @@ export function truckData(lista, vrid, field, value) {
   }
   return lista;
 }
-export async function addNotiHistory(newNoti) {
-  let list = await getLocalStorage("notificationsHistory")
-  if (!list) { list = [] }
 
-  list.push(newNoti)
-  saveLocalStorage("notificationsHistory", list)
-  writeNotiHistory(list)
-
-
-}
 function handleStartButton(e) {
-  
-
+  start();
   if (e.target.checked) {
-    console.log("START")
-    handleStartButton.start=setInterval(testStart,2000)
-    
+    handleStartButton.start = setInterval(start, 180000);
   } else {
-    console.log("STOP")
-    clearInterval(handleStartButton.start)
-
+    console.log("STOP");
+    clearInterval(handleStartButton.start);
   }
+}
+async function start() {
+  console.log("Empezando", new Date().toTimeString());
+  console.log(new Date().toTimeString());
+  console.log("testtttariiveeeee", await testArrive().then(console.log("theeennnn")))
+  
+}
+/*
 
-}
-function testStart(){
-  console.log(new Date().toTimeString())
-}
+*/
