@@ -129,6 +129,7 @@ async function sortListado(i) {
   let listado = await getLocalStorage("listadoCamiones");
   
   let sortKey = await getLocalStorage("sortKey");
+  if (sortKey===null){sortKey={	"key":listado[0][i],"orderDescen":true}}
   if (listado[0][i] === sortKey.key) {
     sortKey.orderDescen = !sortKey.orderDescen;
   }else{ sortKey.orderDescen=true}
