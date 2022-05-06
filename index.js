@@ -164,28 +164,24 @@ function setListeners() {
 async function testYard() {
   //truckData("113NSNYB4", FIELD.DOCK, "IBO 01");
   let data = await fetchYardData();
-  //console.log(data);
+
+  console.table(data);
   let listado = await getLocalStorage("listadoCamiones");
-  data.forEach((dock) => {
-    //console.log(dock)
-    if (dock.yardAssets.length > 0) {
-      console.log(dock);
-      let dockCode = dock.code;
-      dock.yardAssets.forEach((dock) => {
-        if (dock.load.identifiers[0] !== null) {
-          console.log(dock.load.identifiers[0].identifier);
-          listado = truckData(
-            listado,
-            dock.load.identifiers[0].identifier,
-            FIELD.DOCK,
-            dockCode
-          );
-        }
-      });
-      //console.log(dock.code,dock.yardAssets[0].load.identifiers[0].identifier)
-      //console.log(dock.code,dock.yardAssets)[1].load.identifiers[0].identifier
-    }
+  const listaDock =data.filter(ele=> ele.length>0)
+  listado.forEach(camion => {
+    listaDock.forEach((dock,index)=>{
+      if(camion[FIELD.VRID]!=="VRID"&& dock.includes(camion[FIELD.VRID])){
+        console.log(camion[FIELD.VRID],dock,"index="+index)
+        let firstLetter =dock.substring(0, 2);
+        if(firstLetter!=="OB"&&firstLetter!=="IB"){index=index-1}
+        console.log(listaDock[index].substring(0,4))
+        camion[FIELD.DOCK]=listaDock[index].substring(0,4)
+      }
+    })
+    
   });
+  listaDock
+  console.log(listaDock)
   saveLocalStorage("listadoCamiones", listado);
   renderList(listado);
 }
@@ -417,6 +413,7 @@ async function start() {
   console.log("Empezando", new Date().toTimeString());
   console.log(new Date().toTimeString());
   testArrive()
+  testYard()
   
   
 }
