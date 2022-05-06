@@ -59,15 +59,15 @@ let listado;
 //saveLocalStorage([["Time","Date","Action","VRID","Lane","Reason","Arrived","Logged","Dock"],["2:00:00 AM","2022-04-18","Pickup","1148T5NLW","DQA2->MAD7","ATSBagsCartsMixed",false,false,"-"],["1:00:00 AM","2022-04-18","Dropoff","1131RCF5Q","MAD6->DQA2","ATSOutbound",false,false,"-"],["2:45:00 AM","2022-04-18","Dropoff","1139K535C","MAD8->DQA2","ATSOutbound",false,false,"-"],["3:45:00 AM","2022-04-18","Dropoff","11112FZWB","RMU1->DQA2","ATSOutbound",false,false,"-"],["6:40:00 AM","2022-04-18","Dropoff","113PKMLD1","MAD8->DQA2","ATSOutbound",false,false,"-"],["7:00:00 AM","2022-04-18","Dropoff","11353FL3V","MAD6->DQA2","ATSOutbound",false,false,"-"],["7:15:00 AM","2022-04-18","Dropoff","116JWPMNK","MAD9->DQA2","ATSOutbound",false,false,"-"],["7:40:00 AM","2022-04-18","Dropoff","112PR3XG8","MAD8->DQA2","ATSOutbound",false,false,"-"],["10:00:00 AM","2022-04-18","Pickup","111PBVPSZ","DQA2->MAD7","ATSBagsCartsMixed",false,false,"-"],["1:30:00 PM","2022-04-18","Pickup","116GCKN5T","DQA2->MAD4","TransfersEmptyPalletsOB",false,false,"-"],["12:00:00 AM","2022-04-18","Dropoff","112V2DT4F","MAD8->DQA2","ATSOutbound",false,false,"-"],["9:15:00 AM","2022-04-18","Pickup","11684ZT76","DQA2->EQA2","ATSVirtualTruck",false,false,"-"],["5:00:00 PM","2022-04-17","Dropoff","112GL71GJ","SVQ1->DQA2","ATSOutbound",false,false,"-"],["11:05:00 PM","2022-04-18","Dropoff","11484WWCZ","SVQ1->DQA2","ATSOutbound",false,false,"-"],["1:00:00 AM","2022-04-19","Pickup","115LJR5KB","DQA2->MAD7","TransfersCarts",false,false,"-"],["3:15:00 AM","2022-04-19","Dropoff","111JFNT48","SVQ1->DQA2","ATSOutbound",false,false,"-"],["3:45:00 AM","2022-04-19","Dropoff","112MYZKGN","RMU1->DQA2","ATSOutbound",false,false,"-"],["4:00:00 AM","2022-04-19","Dropoff","115QK2X5D","MAD8->DQA2","ATSOutbound",false,false,"-"]])
 setListeners();
 
-export async function getLocalStorage(key) {
+export  function getLocalStorage(key) {
   //localStorage.clear()
   if (!localStorage.listadoCamiones) {
     console.log("listado vacio");
-    listado = await fetchSesameData();
-    console.log(listado);
-    const listadoCamiones = refineArray(listado);
-    localStorage.setItem("listadoCamiones", JSON.stringify(listadoCamiones));
-    console.log(localStorage.listadoCamiones);
+    // listado = await fetchSesameData();
+    // console.log(listado);
+    // const listadoCamiones = refineArray(listado);
+    // localStorage.setItem("listadoCamiones", JSON.stringify(listadoCamiones));
+    // console.log(localStorage.listadoCamiones);
   } else {
     //console.log(localStorage.getItem("listadoCamiones"));
     listado = JSON.parse(localStorage.getItem(key));
@@ -127,7 +127,7 @@ function setListeners() {
 
   document
     .getElementById("testArrived")
-    .addEventListener("click", (e) => testArrive(e));
+    .addEventListener("click", (e) => start(e));
   document
     .getElementById("testYard")
     .addEventListener("click", (e) => testYard(e));
@@ -190,56 +190,14 @@ async function testYard() {
   renderList(listado);
 }
 async function testArrive() {
-  // let test = [
-  //   "7:00:00 AM",
-  //   "7:00:00 AM",
-  //   "2022-04-21",
-  //   "Dropoff",
-  //   "114BFJQXK",
-  //   "MAD6->DQA2",
-  //   "ATSOutbound",
-  //   "-",
-  //   false,
-  //   false,
-  //   "-",
-  // ];
+
   let listado = await getLocalStorage("listadoCamiones");
-  // listado.push(test);
-  saveLocalStorage("listadoCamiones", listado);
-  // listado.forEach(async (ele)=>{
-  //   if(!ele[ARRIVED]){
-  //     console.log(ele[VRID])
+  await getSCCdata(listado)
 
-  //      let data = await fetchMmatTruckData(ele[VRID])
-  //      console.log(ele[VRID],data)
-
-  //   }
-  // })
-  const sccList = await fetchSscData();
-  //console.log(sccList);
-  //'115H7Y9HP', 'MAD4', 'In Yard', 'IB08', '08:15', '07:15', '1271', 'View'
-  //console.log(sccList.filter((ele) => ele.length > 1));
-  sccList
-    .filter((ele) => ele.length > 1)
-    .forEach((ele) => {
-      listado.forEach((e) => {
-        // console.log(ele);
-        //console.log(ele[0], e[FIELD.VRID]);
-
-        if (e.includes(ele[0])) {
-          console.log(`Vris encontrado ${ele[0]} con ${ele[6]} paquetes`);
-          if (!e[FIELD.ARRIVED] && ele[2] === "In Yard") {
-            // e[FIELD.ARRIVED] = true;
-            // sendNotification(e);
-          }
-          e[FIELD.VOLUME] = ele[6];
-          e[FIELD.EXPECTED] = ele[5];
-        }
-      });
-    });
-
-  listado.forEach(async (camion, index) => {
-    if (!camion[FIELD.ARRIVED] || !camion[FIELD.LOGGED]) {
+ 
+console.log("despues sccdata")
+ const test= await listado.forEach(async (camion, index) => {
+     if ( !camion[FIELD.ARRIVED] || !camion[FIELD.LOGGED]) {
       let vrid = camion[FIELD.VRID];
 
       let data = await fetchMmatTruckStopsData(camion[FIELD.VRID]);
@@ -306,12 +264,16 @@ async function testArrive() {
       });
     }
     saveLocalStorage("listadoCamiones", listado);
+    
   });
-
-  renderList(listado);
+console.log("despues mmat")
+renderList(listado)
+  
   return true;
 }
+async function mmatGetDAta(){
 
+}
 // borra el local storage y carga listado desde el sesame
 async function deleteTrucks(e) {
   let listado = await getLocalStorage("listadoCamiones");
@@ -336,7 +298,33 @@ async function deleteTrucks(e) {
   saveLocalStorage("listadoCamiones", listado);
   renderList(listado);
 }
-async function getSCCdata() {}
+async function getSCCdata(listado) {
+  console.log("inicio SSC data")
+  const sccList = await fetchSscData();
+ 
+  console.log("DATOS DE SSC**********************************")
+  const waitForSCC = await sccList
+    .filter((ele) => ele.length > 1)
+    .forEach((ele) => {
+      listado.forEach((e) => {
+        // console.log(ele);
+        //console.log(ele[0], e[FIELD.VRID]);
+
+        if (e.includes(ele[0])) {
+          console.log(`Vris encontrado ${ele[0]} con ${ele[6]} paquetes`);
+          if (!e[FIELD.ARRIVED] && ele[2] === "In Yard") {
+            // e[FIELD.ARRIVED] = true;
+            // sendNotification(e);
+          }
+          e[FIELD.VOLUME] = ele[6];
+          e[FIELD.EXPECTED] = ele[5];
+        }
+      });
+    });
+    console.log(await waitForSCC)
+    return true
+
+}
 async function testTruck() {
   let listado = await getLocalStorage("listadoCamiones");
   //const listadoToTest=listado.filter((ele)=>console.log(ele))
@@ -428,7 +416,8 @@ function handleStartButton(e) {
 async function start() {
   console.log("Empezando", new Date().toTimeString());
   console.log(new Date().toTimeString());
-  console.log("testtttariiveeeee", await testArrive().then(console.log("theeennnn")))
+  testArrive()
+  
   
 }
 /*

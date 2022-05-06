@@ -10,7 +10,7 @@ import { getEpoch } from "./arrayAux.js";
 import { writeNotiHistory } from "./noti.js";
 
 export function renderList(listado) {
-  console.log(listado);
+  console.log("render listado");
   //
   //saveLocalStorage(listado)
 
@@ -99,6 +99,7 @@ export function renderList(listado) {
   renderIcons(listado);
   createTruckDraw(listado);
   saveLocalStorage("listadoCamiones", listado);
+  console.log(new Date().toTimeString());
 }
 async function selectSimilar(e) {
   let rowEle = e.target.parentNode;
@@ -240,7 +241,7 @@ function renderIcons() {
   const list = document.querySelectorAll("td.Arrived,td.Logged");
   list.forEach((ele) => {
     let value = ele.innerHTML;
-    console.log(value);
+    
     let style = getComputedStyle(ele);
     if (value === "true") {
       ele.classList.remove("checkNotOK");
