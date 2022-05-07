@@ -203,7 +203,7 @@ async function getMmaData(listado) {
     if (!camion[FIELD.ARRIVED] || !camion[FIELD.LOGGED]) {
       let vrid = camion[FIELD.VRID];
 
-      let data = await fetchMmatTruckStopsData(camion[FIELD.VRID]);
+      let data = await fetchMmatTruckStopsData(camion[FIELD.VRID])
       //console.log(ele[VRID],data[SITE.name])
       data.forEach((ele) => {
         if (
@@ -264,8 +264,9 @@ async function getMmaData(listado) {
           });
           //[0].timelineEvent.title
           //timelineEvent.stopActions[0].events
+          renderList(listado)
         }
-      });
+      })
     }
     saveLocalStorage("listadoCamiones", listado);
   });
