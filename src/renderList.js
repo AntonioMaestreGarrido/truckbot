@@ -185,7 +185,7 @@ export function TruckAnimate(camion, row, posicion) {
   const camionStyle = getComputedStyle(camion);
 
   let top = Math.floor(position.top);
-  console.log(position)
+  //console.log(position)
   let left;
   switch (posicion) {
     case 0:

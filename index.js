@@ -191,8 +191,8 @@ async function testArrive() {
   await getSCCdata(listado);
 
   console.log("despues sccdata");
-  await getMmaData(listado)
-  
+  await getMmaData(listado);
+
   console.log("despues mmat");
   renderList(listado);
 
@@ -203,7 +203,7 @@ async function getMmaData(listado) {
     if (!camion[FIELD.ARRIVED] || !camion[FIELD.LOGGED]) {
       let vrid = camion[FIELD.VRID];
 
-      let data = await fetchMmatTruckStopsData(camion[FIELD.VRID])
+      let data = await fetchMmatTruckStopsData(camion[FIELD.VRID]);
       //console.log(ele[VRID],data[SITE.name])
       data.forEach((ele) => {
         if (
@@ -234,7 +234,7 @@ async function getMmaData(listado) {
                     e.timeAndFacilityTimeZone.instant
                   )}`
                 );
-
+                renderList(listado);
                 //console.log(vrid, e, new Date(e.timeAndFacilityTimeZone.instant));
               }
               if (
@@ -247,7 +247,7 @@ async function getMmaData(listado) {
                 console.log(camion);
                 sendNotification(camion);
                 if ((listado[index][FIELD.LOGGED] = false)) {
-                 // sendNotification(camion);
+                  // sendNotification(camion);
                 }
                 writeNotiHistory(
                   `Camion ${vrid} marca llegada a las ${new Date(
@@ -259,18 +259,19 @@ async function getMmaData(listado) {
                     e.timeAndFacilityTimeZone.instant
                   )}`
                 );
+                renderList(listado)
               }
             }
           });
           //[0].timelineEvent.title
           //timelineEvent.stopActions[0].events
-          renderList(listado)
+          renderList(listado);
         }
-      })
+      });
     }
     saveLocalStorage("listadoCamiones", listado);
   });
-  return test
+  return test;
 }
 // borra el local storage y carga listado desde el sesame
 async function deleteTrucks(e) {
