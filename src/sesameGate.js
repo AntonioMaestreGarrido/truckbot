@@ -81,3 +81,29 @@ export async function fetchSesameData() {
      
      return scc
  }
+ export async function testets(){
+    let a= await fetch("https://jwmjkz3dsd.execute-api.eu-west-1.amazonaws.com/call/getYardStateWithPendingMoves", {
+        "credentials": "omit",
+        "headers": {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101 Firefox/91.0",
+            "Accept": "application/json, text/plain, */*",
+            "Accept-Language": "en-US,en;q=0.5",
+            "api": "getYardStateWithPendingMoves",
+            "method": "POST",
+            //"token": "eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTE5OTgyNDYsInZpc2l0b3ItaWQiOiJmZWMwNTE0Ni1lY2U3LWVjZDUtNTZiZi02OGYxZTA2YjA2ZjciLCJpcCI6IjUyLjk0LjM2LjUifQ.yNwq3tchjajCZeyHVWNKv6Eg0g_W1umofm3vMhiutxs",
+             "token": "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJZTVMtMS4wIiwiY29udGV4dCI6eyJhY2NvdW50SWQiOiJBMktFTkVMNFYzNlg4NCIsInlhcmQiOiJEUUEyIiwidXNlclR5cGUiOiJ3ZWJhcHAiLCJ1c2VyTmFtZSI6ImFtbWFlc3RyQGFtYXpvbi5jb20iLCJ1c2VySWQiOiJBMzZOQ1FRRDhKMlI1SCIsInRlcm1pbmFsU29mdHdhcmVOYW1lIjoid2ViYXBwIn0sIm5iZiI6MTY1MTk5NjAxMSwiZXhwIjoxNjUyNjAwOTMxLCJpYXQiOjE2NTE5OTYxMzF9.jrvktSQsxhRR3UXM-2diA_DEIN2iVfGCA6P0bSz1s-Q",
+               
+            "Content-Type": "application/json;charset=utf-8",
+            "Sec-Fetch-Dest": "empty",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch-Site": "cross-site"
+        },
+        "referrer": "https://trans-logistics-eu.amazon.com/",
+        "body": "{\"requester\":{\"system\":\"YMSWebApp\"}}",
+        "method": "POST",
+        "mode": "cors"
+    })
+    .then((response) => response.json()).then(data=>console.log(data))
+    console.log(JSON.parse(a))
+    
+ }

@@ -17,6 +17,7 @@ import {
   fetchSesameData,
   fetchSscData,
   fetchYardData,
+  testets,
 } from "./src/sesameGate.js";
 import { sendNotification, writeNotiHistory } from "./src/noti.js";
 import { testMap } from "./src/maps.js";
@@ -136,8 +137,8 @@ function setListeners() {
     .addEventListener("click", (e) => sendNotification(e));
 
   document
-    .getElementById("testSCC")
-    .addEventListener("click", (e) => fetchSscData(e));
+    .getElementById("test")
+    .addEventListener("click", (e) => testets(e));
   document
     .getElementById("clear")
     .addEventListener("click", (e) => localStorage.clear());
@@ -265,11 +266,11 @@ async function getMmaData(listado) {
           });
           //[0].timelineEvent.title
           //timelineEvent.stopActions[0].events
-          renderList(listado);
+         
         }
       });
     }
-    saveLocalStorage("listadoCamiones", listado);
+    
   });
   return test;
 }
@@ -417,6 +418,7 @@ async function start() {
   testArrive();
   testYard();
 }
+testets()
 /*
 
 */
