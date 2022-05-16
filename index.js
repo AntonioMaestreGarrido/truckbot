@@ -197,24 +197,30 @@ async function testYard() {
     });
   });
   listaDock;
-  console.log(listaDock);
+  //console.log(listaDock);
   saveLocalStorage("listadoCamiones", listado);
-  renderList(listado);
+  //renderList(listado);
 }
 async function testArrive() {
   let listado = await getLocalStorage("listadoCamiones");
   await getSCCdata(listado);
 
   console.log("despues sccdata");
-  await getMmaData(listado);
+  console.log( await getMmaData(listado))
+//console.log  (await Promise.allSettled(listado.map(camion=> fetchMmatTruckStopsData(camion[FIELD.VRID]))))
+  // await Promise.all(files.map(async (file) => {
+  //   const contents = await fs.readFile(file, 'utf8')
+  //   console.log(contents)
 
   console.log("despues mmat");
-  renderList(listado);
+  //renderList(listado);
 
   return true;
 }
 async function getMmaData(listado) {
-  const test = await listado.forEach(async (camion, index) => {
+  
+  //const test = await listado.forEach(async (camion, index) => {
+    const test = await Promise.allSettled( listado.map(async  (camion, index) => {
     if (!camion[FIELD.ARRIVED] || !camion[FIELD.LOGGED]) {
       let vrid = camion[FIELD.VRID];
 
@@ -249,7 +255,7 @@ async function getMmaData(listado) {
                     e.timeAndFacilityTimeZone.instant
                   )}`
                 );
-                renderList(listado);
+                
                 //console.log(vrid, e, new Date(e.timeAndFacilityTimeZone.instant));
               }
               if (
@@ -274,7 +280,7 @@ async function getMmaData(listado) {
                     e.timeAndFacilityTimeZone.instant
                   )}`
                 );
-                renderList(listado)
+                
               }
             }
           });
@@ -285,7 +291,7 @@ async function getMmaData(listado) {
       });
     }
     
-  });
+  }));
   return test;
 }
 // borra el local storage y carga listado desde el sesame
@@ -421,6 +427,7 @@ function handleStartButton(e) {
   start();
   if (e.target.checked) {
     handleStartButton.start = setInterval(start, 180000);
+
   } else {
     console.log("STOP");
     clearInterval(handleStartButton.start);
@@ -428,11 +435,16 @@ function handleStartButton(e) {
 }
 async function start() {
   console.log("Empezando", new Date().toTimeString());
-  console.log(new Date().toTimeString());
-  testArrive();
-  testYard();
+  
+  await testArrive();
+  await testYard();
+  renderList(getLocalStorage("listadoCamiones"))
+
+  console.log("Fin", new Date().toTimeString());
+
 }
-testets()
+//testets()
 /*
 
 */
+

@@ -117,7 +117,7 @@ export async function getCoulmnNum(key) {
 
     }
   });
-  if (newListado.length === 0) { return listado } else {
+  if (newListado.length === 0) { return listado.splice(0,1) } else {
     return  newListado
   }
 
