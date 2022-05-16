@@ -12,37 +12,37 @@ export function refineArray(listado) {
   console.log(listado.length); //10
   console.log(listado[1].length); //11
 
-  listado[0][0]="Time"
-  listado[0][1]="Date"
-  listado[0][2]="Action"
-  listado[0][3]="VRID"
-  listado[0][4]="Lane"
-  listado[0][5]="Reason"
+  listado[0][0] = "Time"
+  listado[0][1] = "Date"
+  listado[0][2] = "Action"
+  listado[0][3] = "VRID"
+  listado[0][4] = "Lane"
+  listado[0][5] = "Reason"
   //refine Lane
   listado.forEach(ele => {
-    ele[4]=ele[4].replace("AMZL-","")
-    ele[4]=ele[4].replace("-ND","")
+    ele[4] = ele[4].replace("AMZL-", "")
+    ele[4] = ele[4].replace("-ND", "")
 
     console.log(ele[4])
-    
+
   });
   //cambia hora por date
   listado.forEach(ele => {
-    if(ele[0]!="Time"){
-    ele[0]=new Date(getEpoch(ele))
-    
+    if (ele[0] != "Time") {
+      ele[0] = new Date(getEpoch(ele))
 
-    console.log(ele[4])
+
+      console.log(ele[4])
     }
   });
 
   // se añaden columnas para "arrived""logged"y dock
-  addColumn(listado,1 , "Actual", "-");
+  addColumn(listado, 1, "Actual", "-");
   addColumn(listado, undefined, "Volume", "-");
   addColumn(listado, undefined, "Arrived", false);
   addColumn(listado, undefined, "Logged", false);
   addColumn(listado, undefined, "Dock", "-");
-  
+
   return listado;
 }
 
@@ -63,42 +63,62 @@ export function addColumn(
   header,
   defecto
 ) {
-  console.log("array",array.length)
-  console.log("array[]",array[0].length)
-  console.log("col=",col );
+  console.log("array", array.length)
+  console.log("array[]", array[0].length)
+  console.log("col=", col);
   console.log(array)
-  array[0].splice(col,0,  header);
+  array[0].splice(col, 0, header);
   for (let i = 1; i < array.length; i++) {
-    array[i].splice(col,0,  defecto);
+    array[i].splice(col, 0, defecto);
   }
   console.log(array);
 }
-export    function arrayRemove(arr, value) { 
-    
-  return arr.filter(function(ele){ 
-      return ele != value; 
+export function arrayRemove(arr, value) {
+
+  return arr.filter(function (ele) {
+    return ele != value;
   });
 }
-export function getEpoch(ele){
+export function getEpoch(ele) {
   console.log(ele)
-  
-  let dt=ele[1].split("-")
-    
-  let horaArray=ele[0].split(/:| /)
-  if(horaArray[3]==="PM"){horaArray[0]=parseInt(parseInt(horaArray[0])+12)}
+
+  let dt = ele[1].split("-")
+
+  let horaArray = ele[0].split(/:| /)
+  if (horaArray[3] === "PM") { horaArray[0] = parseInt(parseInt(horaArray[0]) + 12) }
 
 
-  
-  
-  let d= new Date(dt[0],parseInt(dt[1])-1,dt[2],horaArray[0],horaArray[1])
-  
+
+
+  let d = new Date(dt[0], parseInt(dt[1]) - 1, dt[2], horaArray[0], horaArray[1])
+
 
   return d
 
 }
 // devuelve el numero de columna en un array a partir de la clave
-export async function getCoulmnNum(key){
-  const listado=await getLocalStorage("listadoCamiones")
+export async function getCoulmnNum(key) {
+  const listado = await getLocalStorage("listadoCamiones")
 
   return listado.indexOf(key)
 }
+ export function truckListaFiltered() {
+
+  let listado =  getLocalStorage("listadoCamiones");
+  const listTrackDraws = document.querySelectorAll(".drawTruck");
+  let newListado=[];
+  const checkBoxes = document.querySelectorAll("input");
+  checkBoxes.forEach((ele) => {
+    if (ele.checked) {
+      console.log(ele.getAttribute("row"))
+      newListado.push ( listado[parseInt( ele.getAttribute("row"))])
+
+
+
+    }
+  });
+  if (newListado.length === 0) { return listado } else {
+    return  newListado
+  }
+
+ }

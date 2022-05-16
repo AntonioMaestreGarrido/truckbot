@@ -4,7 +4,7 @@
 //     .then((response) => response.json())
 //     .then((data) => {
 
-import { refineArray } from "./src/arrayAux.js";
+import { refineArray, truckListaFiltered } from "./src/arrayAux.js";
 import {
   loading,
   renderList,
@@ -28,6 +28,18 @@ const SITE = {
   longitude: -4.477451896032319,
   name: "DQA2",
 };
+const CONFIG = {
+  "site":{
+    "code":"DQA2",
+    "latitude": 36.69600329644401,
+  "longitude": -4.477451896032319,
+
+  },
+  "notifications":true,
+  "notificationSound":"claxon1.mp3"
+  
+
+}
 console.log(document.cookie);
 export const FIELD = {
   EXPECTED: 1,
@@ -121,7 +133,7 @@ function setListeners() {
     .addEventListener("click", () =>
       renderList(JSON.parse(localStorage.getItem("listadoCamiones")))
     );
-  document.getElementById("test").addEventListener("click", () => testTruck());
+  //document.getElementById("test").addEventListener("click", () => testTruck());
   document
     .getElementById("deleteTruck")
     .addEventListener("click", (e) => deleteTrucks(e));
@@ -138,7 +150,9 @@ function setListeners() {
 
   document
     .getElementById("test")
-    .addEventListener("click", (e) => testets(e));
+    .addEventListener("click", (e) =>{
+      const t=truckListaFiltered();
+      console.table( t)});
   document
     .getElementById("clear")
     .addEventListener("click", (e) => localStorage.clear());
