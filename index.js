@@ -341,7 +341,7 @@ async function getSCCdata(listado) {
         }
       });
     });
-  console.log(await waitForSCC);
+ saveLocalStorage("listadoCamiones",listado)
   return true;
 }
 async function testTruck() {
@@ -443,8 +443,28 @@ async function start() {
   console.log("Fin", new Date().toTimeString());
 
 }
-//testets()
-/*
 
-*/
+// sso()
+// async function sso(){
+//   const data=await fetch("https://jwmjkz3dsd.execute-api.eu-west-1.amazonaws.com/call/getYardStateWithPendingMoves", {
+//     "credentials": "omit",
+//     "headers": {
+//         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101 Firefox/91.0",
+//         "Accept": "application/json, text/plain, */*",
+//         "Accept-Language": "en-US,en;q=0.5",
+//         "api": "getYardStateWithPendingMoves",
+//         "method": "POST",
 
+//         "token": "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJZTVMtMS4wIiwiY29udGV4dCI6eyJhY2NvdW50SWQiOiJBMktFTkVMNFYzNlg4NCIsInlhcmQiOiJEUUEyIiwidXNlclR5cGUiOiJ3ZWJhcHAiLCJ1c2VyTmFtZSI6ImFtbWFlc3RyQGFtYXpvbi5jb20iLCJ1c2VySWQiOiJBMzZOQ1FRRDhKMlI1SCIsInRlcm1pbmFsU29mdHdhcmVOYW1lIjoid2ViYXBwIn0sIm5iZiI6MTY1Mjc0NzAwMSwiZXhwIjoxNjUzMzUxOTIxLCJpYXQiOjE2NTI3NDcxMjF9.ho4yfqUmXYxDxHPQgaAYQc-t5Mh0JcojtyLJ_WBBmbM",
+          
+//         "Content-Type": "application/json;charset=utf-8",
+//         "Sec-Fetch-Dest": "empty",
+//         "Sec-Fetch-Mode": "cors",
+//         "Sec-Fetch-Site": "cross-site"
+//     },
+//     "referrer": "https://trans-logistics-eu.amazon.com/",
+//     "body": "{\"requester\":{\"system\":\"YMSWebApp\"}}",
+//     "method": "POST",
+//     "mode": "cors"
+// }).then((response) => response.json()).then(data=>console.log(data))
+// }
