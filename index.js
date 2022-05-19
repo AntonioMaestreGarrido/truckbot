@@ -180,6 +180,7 @@ async function testYard() {
   let listado = await getLocalStorage("listadoCamiones");
   const listaDock = data.filter((ele) => ele.length > 0);
   listado.forEach((camion) => {
+
     listaDock.forEach((dock, index) => {
       if (camion[FIELD.VRID] !== "VRID" && dock.includes(camion[FIELD.VRID])) {
         console.log(camion[FIELD.VRID], dock, "index=" + index);
@@ -189,14 +190,15 @@ async function testYard() {
         }
         console.log(listaDock[index].substring(0, 4));
         camion[FIELD.DOCK] = listaDock[index].substring(0, 4);
-      } else if (
-        camion[FIELD.LOGGED] &&
-        camion[FIELD.ARRIVED] &&
-        camion[FIELD.DOCK] !== "-"
-      ) {
-        camion[FIELD.DOCK] = "Out";
-      }
-    });
+      } 
+      
+    }); if (
+      camion[FIELD.LOGGED]===true &&
+      camion[FIELD.ARRIVED]===true &&
+      camion[FIELD.DOCK] !== "-"
+    ) {
+      camion[FIELD.DOCK] = "Out";
+    }
   });
   listaDock;
   //console.log(listaDock);
