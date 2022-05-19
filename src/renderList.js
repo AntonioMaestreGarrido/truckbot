@@ -233,6 +233,9 @@ function createTruckDraw(listado) {
       if (camion[FIELD.LOGGED]) {
         posicion = 2;
       }
+      if(camion[FIELD.DOCK]="Out"){
+        posicion=3
+      }
       //console.log("el truck es ",truck)
       truck.addEventListener("click", (e) => toolTipRender(e));
       TruckAnimate(truck, index, posicion);

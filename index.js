@@ -29,17 +29,14 @@ const SITE = {
   name: "DQA2",
 };
 const CONFIG = {
-  "site":{
-    "code":"DQA2",
-    "latitude": 36.69600329644401,
-  "longitude": -4.477451896032319,
-
+  site: {
+    code: "DQA2",
+    latitude: 36.69600329644401,
+    longitude: -4.477451896032319,
   },
-  "notifications":true,
-  "notificationSound":"claxon1.mp3"
-  
-
-}
+  notifications: true,
+  notificationSound: "claxon1.mp3",
+};
 console.log(document.cookie);
 export const FIELD = {
   EXPECTED: 1,
@@ -148,11 +145,10 @@ function setListeners() {
     .getElementById("testNotification")
     .addEventListener("click", (e) => sendNotification(e));
 
-  document
-    .getElementById("test")
-    .addEventListener("click", (e) =>{
-      const t=truckListaFiltered();
-      console.table( t)});
+  document.getElementById("test").addEventListener("click", (e) => {
+    const t = truckListaFiltered();
+    console.table(t);
+  });
   document
     .getElementById("clear")
     .addEventListener("click", (e) => localStorage.clear());
@@ -193,6 +189,12 @@ async function testYard() {
         }
         console.log(listaDock[index].substring(0, 4));
         camion[FIELD.DOCK] = listaDock[index].substring(0, 4);
+      } else if (
+        camion[FIELD.LOGGED] &&
+        camion[FIELD.ARRIVED] &&
+        camion[FIELD.DOCK] !== "-"
+      ) {
+        camion[FIELD.DOCK] = "Out";
       }
     });
   });
@@ -206,8 +208,8 @@ async function testArrive() {
   await getSCCdata(listado);
 
   console.log("despues sccdata");
-  console.log( await getMmaData(listado))
-//console.log  (await Promise.allSettled(listado.map(camion=> fetchMmatTruckStopsData(camion[FIELD.VRID]))))
+  console.log(await getMmaData(listado));
+  //console.log  (await Promise.allSettled(listado.map(camion=> fetchMmatTruckStopsData(camion[FIELD.VRID]))))
   // await Promise.all(files.map(async (file) => {
   //   const contents = await fs.readFile(file, 'utf8')
   //   console.log(contents)
@@ -218,80 +220,78 @@ async function testArrive() {
   return true;
 }
 async function getMmaData(listado) {
-  
   //const test = await listado.forEach(async (camion, index) => {
-    const test = await Promise.allSettled( listado.map(async  (camion, index) => {
-    if (!camion[FIELD.ARRIVED] || !camion[FIELD.LOGGED]) {
-      let vrid = camion[FIELD.VRID];
+  const test = await Promise.allSettled(
+    listado.map(async (camion, index) => {
+      if (!camion[FIELD.ARRIVED] || !camion[FIELD.LOGGED]) {
+        let vrid = camion[FIELD.VRID];
 
-      let data = await fetchMmatTruckStopsData(camion[FIELD.VRID]);
-      //console.log(ele[VRID],data[SITE.name])
-      data.forEach((ele) => {
-        if (
-          ele.timelineEvent.title === SITE.name &&
-          ele.timelineEvent.stopActions[0].events.length > 0
-        ) {
-          //console.log(vrid,ele.timelineEvent.stopActions[0].events)
-          let events = ele.timelineEvent.stopActions[0].events;
-          events.forEach((e) => {
-            if (e.localizableDescription.enumValue === "CHECKED_IN") {
-              if (
-                e.eventSource === "YMS" &&
-                listado[index][FIELD.LOGGED] === false
-              ) {
-                console.log(index);
-                console.log(listado[index]);
-                listado[index][FIELD.LOGGED] = true;
-                //listado[index][FIELD.ARRIVED] = true;
-                saveLocalStorage("listadoCamiones", listado);
-                console.log(listado[index]);
-                writeNotiHistory(
-                  `Camion ${vrid} metido en el sistema a las ${new Date(
-                    e.timeAndFacilityTimeZone.instant
-                  )}`
-                );
-                console.log(
-                  `Camion ${vrid} metido en el sistema a las ${new Date(
-                    e.timeAndFacilityTimeZone.instant
-                  )}`
-                );
-                
-                //console.log(vrid, e, new Date(e.timeAndFacilityTimeZone.instant));
-              }
-              if (
-                e.eventSource === "MOBILE_GEOFENCED" &&
-                listado[index][FIELD.ARRIVED] === false
-              ) {
-                listado[index][FIELD.ARRIVED] = true;
-                saveLocalStorage("listadoCamiones", listado);
+        let data = await fetchMmatTruckStopsData(camion[FIELD.VRID]);
+        //console.log(ele[VRID],data[SITE.name])
+        data.forEach((ele) => {
+          if (
+            ele.timelineEvent.title === SITE.name &&
+            ele.timelineEvent.stopActions[0].events.length > 0
+          ) {
+            //console.log(vrid,ele.timelineEvent.stopActions[0].events)
+            let events = ele.timelineEvent.stopActions[0].events;
+            events.forEach((e) => {
+              if (e.localizableDescription.enumValue === "CHECKED_IN") {
+                if (
+                  e.eventSource === "YMS" &&
+                  listado[index][FIELD.LOGGED] === false
+                ) {
+                  console.log(index);
+                  console.log(listado[index]);
+                  listado[index][FIELD.LOGGED] = true;
+                  //listado[index][FIELD.ARRIVED] = true;
+                  saveLocalStorage("listadoCamiones", listado);
+                  console.log(listado[index]);
+                  writeNotiHistory(
+                    `Camion ${vrid} metido en el sistema a las ${new Date(
+                      e.timeAndFacilityTimeZone.instant
+                    )}`
+                  );
+                  console.log(
+                    `Camion ${vrid} metido en el sistema a las ${new Date(
+                      e.timeAndFacilityTimeZone.instant
+                    )}`
+                  );
 
-                console.log(camion);
-                sendNotification(camion);
-                if ((listado[index][FIELD.LOGGED] = false)) {
-                  // sendNotification(camion);
+                  //console.log(vrid, e, new Date(e.timeAndFacilityTimeZone.instant));
                 }
-                writeNotiHistory(
-                  `Camion ${vrid} marca llegada a las ${new Date(
-                    e.timeAndFacilityTimeZone.instant
-                  )}`
-                );
-                console.log(
-                  `Camion ${vrid} marca llegada a las ${new Date(
-                    e.timeAndFacilityTimeZone.instant
-                  )}`
-                );
-                
+                if (
+                  e.eventSource === "MOBILE_GEOFENCED" &&
+                  listado[index][FIELD.ARRIVED] === false
+                ) {
+                  listado[index][FIELD.ARRIVED] = true;
+                  saveLocalStorage("listadoCamiones", listado);
+
+                  console.log(camion);
+                  sendNotification(camion);
+                  if ((listado[index][FIELD.LOGGED] = false)) {
+                    // sendNotification(camion);
+                  }
+                  writeNotiHistory(
+                    `Camion ${vrid} marca llegada a las ${new Date(
+                      e.timeAndFacilityTimeZone.instant
+                    )}`
+                  );
+                  console.log(
+                    `Camion ${vrid} marca llegada a las ${new Date(
+                      e.timeAndFacilityTimeZone.instant
+                    )}`
+                  );
+                }
               }
-            }
-          });
-          //[0].timelineEvent.title
-          //timelineEvent.stopActions[0].events
-         
-        }
-      });
-    }
-    
-  }));
+            });
+            //[0].timelineEvent.title
+            //timelineEvent.stopActions[0].events
+          }
+        });
+      }
+    })
+  );
   return test;
 }
 // borra el local storage y carga listado desde el sesame
@@ -341,7 +341,7 @@ async function getSCCdata(listado) {
         }
       });
     });
- saveLocalStorage("listadoCamiones",listado)
+  saveLocalStorage("listadoCamiones", listado);
   return true;
 }
 async function testTruck() {
@@ -426,8 +426,7 @@ export function truckData(lista, vrid, field, value) {
 function handleStartButton(e) {
   start();
   if (e.target.checked) {
-    handleStartButton.start = setInterval(start, 180000);
-
+    handleStartButton.start = setInterval(start, 120000);
   } else {
     console.log("STOP");
     clearInterval(handleStartButton.start);
@@ -435,13 +434,12 @@ function handleStartButton(e) {
 }
 async function start() {
   console.log("Empezando", new Date().toTimeString());
-  
+
   await testArrive();
   await testYard();
-  renderList(getLocalStorage("listadoCamiones"))
+  renderList(getLocalStorage("listadoCamiones"));
 
   console.log("Fin", new Date().toTimeString());
-
 }
 
 // sso()
@@ -456,7 +454,7 @@ async function start() {
 //         "method": "POST",
 
 //         "token": "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJZTVMtMS4wIiwiY29udGV4dCI6eyJhY2NvdW50SWQiOiJBMktFTkVMNFYzNlg4NCIsInlhcmQiOiJEUUEyIiwidXNlclR5cGUiOiJ3ZWJhcHAiLCJ1c2VyTmFtZSI6ImFtbWFlc3RyQGFtYXpvbi5jb20iLCJ1c2VySWQiOiJBMzZOQ1FRRDhKMlI1SCIsInRlcm1pbmFsU29mdHdhcmVOYW1lIjoid2ViYXBwIn0sIm5iZiI6MTY1Mjc0NzAwMSwiZXhwIjoxNjUzMzUxOTIxLCJpYXQiOjE2NTI3NDcxMjF9.ho4yfqUmXYxDxHPQgaAYQc-t5Mh0JcojtyLJ_WBBmbM",
-          
+
 //         "Content-Type": "application/json;charset=utf-8",
 //         "Sec-Fetch-Dest": "empty",
 //         "Sec-Fetch-Mode": "cors",
