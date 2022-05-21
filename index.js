@@ -176,11 +176,15 @@ async function testYard() {
   //truckData("113NSNYB4", FIELD.DOCK, "IBO 01");
   let data = await fetchYardData();
 
+
   console.table(data);
   let listado = await getLocalStorage("listadoCamiones");
+  listado[0][FIELD.DOCK]="Dock"
   const listaDock = data.filter((ele) => ele.length > 0);
   listado.forEach((camion) => {
-    let found=false
+    if(camion[FIELD.DOCK] ==="Dock"){return}
+    camion[FIELD.DOCK] = "-"
+    let found = false;
 
     listaDock.forEach((dock, index) => {
       if (camion[FIELD.VRID] !== "VRID" && dock.includes(camion[FIELD.VRID])) {
@@ -191,14 +195,14 @@ async function testYard() {
         }
         console.log(listaDock[index].substring(0, 4));
         camion[FIELD.DOCK] = listaDock[index].substring(0, 4);
-        found=true
-      } 
-      
-    }); if (
-      found===false &&
-      camion[FIELD.LOGGED]===true &&
-      camion[FIELD.ARRIVED]===true &&
-      camion[FIELD.DOCK] !== "-"
+        found = true;
+      }
+    });
+    if (
+      found === false &&
+      camion[FIELD.LOGGED] === true &&
+      camion[FIELD.ARRIVED] === true 
+      //camion[FIELD.DOCK] !== "-"
     ) {
       camion[FIELD.DOCK] = "Out";
     }

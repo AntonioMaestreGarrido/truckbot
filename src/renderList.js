@@ -200,7 +200,7 @@ export function TruckAnimate(camion, row, posicion) {
 
       break;
     case 3:
-      left = window.innerWidth + 200;
+      left = window.innerWidth + 5;
 
       break;
 
@@ -233,7 +233,7 @@ function createTruckDraw(listado) {
       if (camion[FIELD.LOGGED]) {
         posicion = 2;
       }
-      if(camion[FIELD.DOCK]="Out"){
+      if(camion[FIELD.DOCK]==="Out"){
         posicion=3
       }
       //console.log("el truck es ",truck)
