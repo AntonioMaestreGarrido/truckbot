@@ -59,3 +59,22 @@ export async function writeNotiHistory(noti = "") {
     container.prepend(newP);
   }
 }
+ export async function notiChime(msg){
+ 
+ let xhr = new XMLHttpRequest();
+  xhr.open("POST", "http://localhost:3001/chimeMsg");
+  
+  xhr.setRequestHeader("Content-Type", "application/json");
+  
+  xhr.onreadystatechange = function () {
+     if (xhr.readyState === 4) {
+        console.log(xhr.status);
+        console.log(xhr.responseText);
+     }};
+  
+  var data =JSON.stringify ({"Content":msg})
+  
+  xhr.send(data);
+
+
+}

@@ -19,7 +19,7 @@ import {
   fetchYardData,
   testets,
 } from "./src/sesameGate.js";
-import { sendNotification, writeNotiHistory } from "./src/noti.js";
+import { notiChime, sendNotification, writeNotiHistory } from "./src/noti.js";
 import { testMap } from "./src/maps.js";
 
 //listado de constantes que definen la posicion en el array
@@ -37,7 +37,7 @@ const CONFIG = {
   notifications: true,
   notificationSound: "claxon1.mp3",
 };
-console.log(document.cookie);
+
 export const FIELD = {
   EXPECTED: 1,
   ACTION: 3,
@@ -59,7 +59,7 @@ const CABECERA = [
   "Logged",
   "Dock",
 ];
-console.log(document.getElementById("truckLoader").style.display);
+
 document.getElementById("tableContainer").style.cursor = "pointer";
 
 let listado;
@@ -146,8 +146,8 @@ function setListeners() {
     .addEventListener("click", (e) => sendNotification(e));
 
   document.getElementById("test").addEventListener("click", (e) => {
-    const t = truckListaFiltered();
-    console.table(t);
+    notiChime("rtrtrsgcbbcidcidcbdicjb")
+    
   });
   document
     .getElementById("clear")
