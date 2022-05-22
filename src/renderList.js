@@ -86,7 +86,7 @@ export function renderList(listado) {
     cuerpo.appendChild(fila);
     fila.setAttribute("VRID", listado[j][4]);
   }
-  cuerpo.addEventListener("dblclick", (e) => selectSimilar(e));
+  cuerpo.addEventListener("dblclick", (e) =>{clearTimeout(); selectSimilar(e)});
   tabla.appendChild(cabecera);
   tabla.appendChild(cuerpo);
   container.innerHTML = "";

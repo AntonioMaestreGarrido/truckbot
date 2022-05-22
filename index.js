@@ -21,6 +21,7 @@ import {
 } from "./src/sesameGate.js";
 import { notiChime, sendNotification, writeNotiHistory } from "./src/noti.js";
 import { testMap } from "./src/maps.js";
+import { createModal, setListenerModal } from "./src/modal.js";
 
 //listado de constantes que definen la posicion en el array
 const SITE = {
@@ -121,10 +122,11 @@ async function handleRefreshSesameButton() {
   loading();
 }
 function setListeners() {
+  setListenerModal()
   document
     .getElementById("refreshSesame")
     .addEventListener("click", () => handleRefreshSesameButton());
-
+document.getElementById("tableContainer").addEventListener("click",(e)=> setTimeout(()=> createModal(e),5000))
   document
     .getElementById("render")
     .addEventListener("click", () =>
