@@ -19,6 +19,7 @@ export function sendNotification(ele) {
 
   let title = "Truck";
   var text = `Llega camion de ${asunto} VRID:${vrid}`;
+  notiChime(text)
   var notification = new Notification("Truck Arrived", {
     body: text,
     image: img,
@@ -60,7 +61,7 @@ export async function writeNotiHistory(noti = "") {
   }
 }
  export async function notiChime(msg){
- 
+ let link="https://hooks.chime.aws/incomingwebhooks/d4dd040c-16a9-41b5-a202-29fa312b70a7?token=c0hIWlFDMzd8MXw5d0ROZXFWZ1M5dUNzVEFjOVBfRy1ld2FzNEF5M1lRWDVRZVAzQjFGTi1B"
  let xhr = new XMLHttpRequest();
   xhr.open("POST", "http://localhost:3001/chimeMsg");
   
@@ -72,7 +73,7 @@ export async function writeNotiHistory(noti = "") {
         console.log(xhr.responseText);
      }};
   
-  var data =JSON.stringify ({"Content":msg})
+  var data =JSON.stringify ({"Content":msg,"Link":link})
   
   xhr.send(data);
 

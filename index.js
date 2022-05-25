@@ -9,6 +9,7 @@ import {
   createTruckDraw,
   loading,
   renderList,
+  selectSimilar,
   testTime,
   testTruckAnimation,
 } from "./src/renderList.js";
@@ -69,6 +70,7 @@ let listado;
 // getLocalStorage();
 // [["Time","Date","Action","VRID","Lane","Reason","Arrived","Logged","Dock"],["2:00:00 AM","2022-04-18","Pickup","1148T5NLW","DQA2->MAD7","ATSBagsCartsMixed",false,false,"-"],["1:00:00 AM","2022-04-18","Dropoff","1131RCF5Q","MAD6->DQA2","ATSOutbound",false,false,"-"],["2:45:00 AM","2022-04-18","Dropoff","1139K535C","MAD8->DQA2","ATSOutbound",false,false,"-"],["3:45:00 AM","2022-04-18","Dropoff","11112FZWB","RMU1->DQA2","ATSOutbound",false,false,"-"],["6:40:00 AM","2022-04-18","Dropoff","113PKMLD1","MAD8->DQA2","ATSOutbound",false,false,"-"],["7:00:00 AM","2022-04-18","Dropoff","11353FL3V","MAD6->DQA2","ATSOutbound",false,false,"-"],["7:15:00 AM","2022-04-18","Dropoff","116JWPMNK","MAD9->DQA2","ATSOutbound",false,false,"-"],["7:40:00 AM","2022-04-18","Dropoff","112PR3XG8","MAD8->DQA2","ATSOutbound",false,false,"-"],["10:00:00 AM","2022-04-18","Pickup","111PBVPSZ","DQA2->MAD7","ATSBagsCartsMixed",false,false,"-"],["1:30:00 PM","2022-04-18","Pickup","116GCKN5T","DQA2->MAD4","TransfersEmptyPalletsOB",false,false,"-"],["12:00:00 AM","2022-04-18","Dropoff","112V2DT4F","MAD8->DQA2","ATSOutbound",false,false,"-"],["9:15:00 AM","2022-04-18","Pickup","11684ZT76","DQA2->EQA2","ATSVirtualTruck",false,false,"-"],["5:00:00 PM","2022-04-17","Dropoff","112GL71GJ","SVQ1->DQA2","ATSOutbound",false,false,"-"],["11:05:00 PM","2022-04-18","Dropoff","11484WWCZ","SVQ1->DQA2","ATSOutbound",false,false,"-"],["1:00:00 AM","2022-04-19","Pickup","115LJR5KB","DQA2->MAD7","TransfersCarts",false,false,"-"],["3:15:00 AM","2022-04-19","Dropoff","111JFNT48","SVQ1->DQA2","ATSOutbound",false,false,"-"],["3:45:00 AM","2022-04-19","Dropoff","112MYZKGN","RMU1->DQA2","ATSOutbound",false,false,"-"],["4:00:00 AM","2022-04-19","Dropoff","115QK2X5D","MAD8->DQA2","ATSOutbound",false,false,"-"]]
 //saveLocalStorage([["Time","Date","Action","VRID","Lane","Reason","Arrived","Logged","Dock"],["2:00:00 AM","2022-04-18","Pickup","1148T5NLW","DQA2->MAD7","ATSBagsCartsMixed",false,false,"-"],["1:00:00 AM","2022-04-18","Dropoff","1131RCF5Q","MAD6->DQA2","ATSOutbound",false,false,"-"],["2:45:00 AM","2022-04-18","Dropoff","1139K535C","MAD8->DQA2","ATSOutbound",false,false,"-"],["3:45:00 AM","2022-04-18","Dropoff","11112FZWB","RMU1->DQA2","ATSOutbound",false,false,"-"],["6:40:00 AM","2022-04-18","Dropoff","113PKMLD1","MAD8->DQA2","ATSOutbound",false,false,"-"],["7:00:00 AM","2022-04-18","Dropoff","11353FL3V","MAD6->DQA2","ATSOutbound",false,false,"-"],["7:15:00 AM","2022-04-18","Dropoff","116JWPMNK","MAD9->DQA2","ATSOutbound",false,false,"-"],["7:40:00 AM","2022-04-18","Dropoff","112PR3XG8","MAD8->DQA2","ATSOutbound",false,false,"-"],["10:00:00 AM","2022-04-18","Pickup","111PBVPSZ","DQA2->MAD7","ATSBagsCartsMixed",false,false,"-"],["1:30:00 PM","2022-04-18","Pickup","116GCKN5T","DQA2->MAD4","TransfersEmptyPalletsOB",false,false,"-"],["12:00:00 AM","2022-04-18","Dropoff","112V2DT4F","MAD8->DQA2","ATSOutbound",false,false,"-"],["9:15:00 AM","2022-04-18","Pickup","11684ZT76","DQA2->EQA2","ATSVirtualTruck",false,false,"-"],["5:00:00 PM","2022-04-17","Dropoff","112GL71GJ","SVQ1->DQA2","ATSOutbound",false,false,"-"],["11:05:00 PM","2022-04-18","Dropoff","11484WWCZ","SVQ1->DQA2","ATSOutbound",false,false,"-"],["1:00:00 AM","2022-04-19","Pickup","115LJR5KB","DQA2->MAD7","TransfersCarts",false,false,"-"],["3:15:00 AM","2022-04-19","Dropoff","111JFNT48","SVQ1->DQA2","ATSOutbound",false,false,"-"],["3:45:00 AM","2022-04-19","Dropoff","112MYZKGN","RMU1->DQA2","ATSOutbound",false,false,"-"],["4:00:00 AM","2022-04-19","Dropoff","115QK2X5D","MAD8->DQA2","ATSOutbound",false,false,"-"]])
+renderList(JSON.parse(localStorage.getItem("listadoCamiones")));
 setListeners();
 
 export function getLocalStorage(key) {
@@ -123,14 +125,37 @@ async function handleRefreshSesameButton() {
   loading();
 }
 function setListeners() {
-  setListenerModal()
-  console.log("lis")
-  document.addEventListener('scroll',(e)=>createTruckDraw(getLocalStorage("listadoCamiones")))
+  setListenerModal();
+  console.log("lis");
+  document.addEventListener("scroll", (e) =>
+    createTruckDraw(getLocalStorage("listadoCamiones"))
+  );
+
+  let t=document.querySelector("#tableContainer tbody")
+  console.log(t)
   document
     .getElementById("refreshSesame")
     .addEventListener("click", () => handleRefreshSesameButton());
-document.getElementById("tableContainer").addEventListener("click",(e)=> setTimeout(()=> createModal(e),2000))
+  document.querySelector("#tableContainer tbody").addEventListener("click", (e) => {
+    console.log("sinlge");
+    window.isSingleClick = true;
+    setTimeout(() => {
+      if (window.isSingleClick) {
+        createModal(e);
+
+      }
+    }, 250);
+  });
+
   document
+    .querySelector("#tableContainer tbody")
+    .addEventListener("dblclick", (e) => {
+      console.log("double");
+      window.isSingleClick = false;
+      selectSimilar(e);
+    });
+  document
+
     .getElementById("render")
     .addEventListener("click", () =>
       renderList(JSON.parse(localStorage.getItem("listadoCamiones")))
@@ -151,8 +176,7 @@ document.getElementById("tableContainer").addEventListener("click",(e)=> setTime
     .addEventListener("click", (e) => sendNotification(e));
 
   document.getElementById("test").addEventListener("click", (e) => {
-    notiChime("rtrtrsgcbbcidcidcbdicjb")
-    
+    notiChime("rtrtrsgcbbcidcidcbdicjb");
   });
   document
     .getElementById("clear")
@@ -181,14 +205,15 @@ async function testYard() {
   //truckData("113NSNYB4", FIELD.DOCK, "IBO 01");
   let data = await fetchYardData();
 
-
   console.table(data);
   let listado = await getLocalStorage("listadoCamiones");
-  listado[0][FIELD.DOCK]="Dock"
+  listado[0][FIELD.DOCK] = "Dock";
   const listaDock = data.filter((ele) => ele.length > 0);
   listado.forEach((camion) => {
-    if(camion[FIELD.DOCK] ==="Dock"){return}
-    camion[FIELD.DOCK] = "-"
+    if (camion[FIELD.DOCK] === "Dock") {
+      return;
+    }
+    camion[FIELD.DOCK] = "-";
     let found = false;
 
     listaDock.forEach((dock, index) => {
@@ -206,7 +231,7 @@ async function testYard() {
     if (
       found === false &&
       camion[FIELD.LOGGED] === true &&
-      camion[FIELD.ARRIVED] === true 
+      camion[FIELD.ARRIVED] === true
       //camion[FIELD.DOCK] !== "-"
     ) {
       camion[FIELD.DOCK] = "Out";

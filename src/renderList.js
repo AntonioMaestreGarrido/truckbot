@@ -86,7 +86,7 @@ export function renderList(listado) {
     cuerpo.appendChild(fila);
     fila.setAttribute("VRID", listado[j][4]);
   }
-  cuerpo.addEventListener("dblclick", (e) =>{clearTimeout(); selectSimilar(e)});
+  //cuerpo.addEventListener("dblclick", (e) =>{ selectSimilar(e)});
   tabla.appendChild(cabecera);
   tabla.appendChild(cuerpo);
   container.innerHTML = "";
@@ -101,7 +101,7 @@ export function renderList(listado) {
   saveLocalStorage("listadoCamiones", listado);
   console.log(new Date().toTimeString());
 }
-async function selectSimilar(e) {
+export async function selectSimilar(e) {
   let rowEle = e.target.parentNode;
   let value = rowEle.querySelector(`input`).checked;
   value = !value;
@@ -118,7 +118,7 @@ async function selectSimilar(e) {
 }
 function changeAllInputs(inputstate) {
   //alert(inputstate)
-  let inputs = document.querySelectorAll("input[type='checkbox']");
+  let inputs = document.querySelectorAll("tbody input[type='checkbox']");
   console.log(inputs.length);
   inputs.forEach((ele) => {
     ele.checked = inputstate;
@@ -181,8 +181,7 @@ export function TruckAnimate(camion, row, posicion) {
 
   const position = fila.getBoundingClientRect();
   //const camion = truck
-  if(row===1){
-console.log(position)}
+
   const camionStyle = getComputedStyle(camion);
 
   let top = Math.floor(position.top);
