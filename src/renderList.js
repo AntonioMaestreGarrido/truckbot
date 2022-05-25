@@ -181,7 +181,8 @@ export function TruckAnimate(camion, row, posicion) {
 
   const position = fila.getBoundingClientRect();
   //const camion = truck
-
+  if(row===1){
+console.log(position)}
   const camionStyle = getComputedStyle(camion);
 
   let top = Math.floor(position.top);
