@@ -58,7 +58,8 @@ export function setListenerModal() {
     .querySelector("button.yardEvents")
     .addEventListener("click", (e, vrid) =>
       window.open(
-        `https://trans-logistics-eu.amazon.com/yms/eventHistory#/eventReport?yard=DQA2&fromDate=1651960800000&toDate=1653256799999&loadIdentifier=${getVridFromModal()}`
+        `https://trans-logistics-eu.amazon.com/yms/eventHistory#/eventReport?yard=DQA2&loadIdentifier=${getVridFromModal()}`
+        //&fromDate=1651960800000&toDate=1653256799999
       )
     );
   modal
