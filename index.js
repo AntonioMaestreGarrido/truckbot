@@ -6,6 +6,7 @@
 
 import { refineArray, truckListaFiltered } from "./src/arrayAux.js";
 import {
+  createTruckDraw,
   loading,
   renderList,
   testTime,
@@ -123,10 +124,11 @@ async function handleRefreshSesameButton() {
 }
 function setListeners() {
   setListenerModal()
+  document.addEventListener('scroll',(e)=>createTruckDraw(getLocalStorage("listadoCamiones")))
   document
     .getElementById("refreshSesame")
     .addEventListener("click", () => handleRefreshSesameButton());
-document.getElementById("tableContainer").addEventListener("click",(e)=> setTimeout(()=> createModal(e),5000))
+document.getElementById("tableContainer").addEventListener("click",(e)=> setTimeout(()=> createModal(e),2000))
   document
     .getElementById("render")
     .addEventListener("click", () =>

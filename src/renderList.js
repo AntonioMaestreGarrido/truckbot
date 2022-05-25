@@ -211,7 +211,7 @@ export function TruckAnimate(camion, row, posicion) {
   camion.style.left = `${left}px`;
   camion.style.top = `${top}px`;
 }
-function createTruckDraw(listado) {
+export function createTruckDraw(listado) {
   let truck;
   listado
     .filter((ele, index) => index > 0)
