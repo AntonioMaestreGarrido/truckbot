@@ -131,29 +131,30 @@ function setListeners() {
     createTruckDraw(getLocalStorage("listadoCamiones"))
   );
 
-  let t=document.querySelector("#tableContainer tbody")
-  console.log(t)
+  
+  
   document
     .getElementById("refreshSesame")
     .addEventListener("click", () => handleRefreshSesameButton());
-  document.querySelector("#tableContainer tbody").addEventListener("click", (e) => {
-    console.log("sinlge");
-    window.isSingleClick = true;
-    setTimeout(() => {
-      if (window.isSingleClick) {
-        createModal(e);
 
-      }
-    }, 250);
-  });
+  // document.querySelector("#tableContainer tbody").addEventListener("click", (e) => {
+  //   console.log("sinlge");
+  //   window.isSingleClick = true;
+  //   setTimeout(() => {
+  //     if (window.isSingleClick) {
+  //       createModal(e);
 
-  document
-    .querySelector("#tableContainer tbody")
-    .addEventListener("dblclick", (e) => {
-      console.log("double");
-      window.isSingleClick = false;
-      selectSimilar(e);
-    });
+  //     }
+  //   }, 250);
+  // });
+
+  // document
+  //   .querySelector("#tableContainer tbody")
+  //   .addEventListener("dblclick", (e) => {
+  //     console.log("double");
+  //     window.isSingleClick = false;
+  //     selectSimilar(e);
+  //   });
   document
 
     .getElementById("render")

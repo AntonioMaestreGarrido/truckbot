@@ -8,6 +8,7 @@ import { addColumn, deleteColumn, refineArray } from "./arrayAux.js";
 import { fetchSscData } from "./sesameGate.js";
 import { getEpoch } from "./arrayAux.js";
 import { writeNotiHistory } from "./noti.js";
+import { createModal } from "./modal.js";
 
 export function renderList(listado) {
   console.log("render listado");
@@ -100,6 +101,24 @@ export function renderList(listado) {
   createTruckDraw(listado);
   saveLocalStorage("listadoCamiones", listado);
   console.log(new Date().toTimeString());
+  document.querySelector("#tableContainer tbody").addEventListener("click", (e) => {
+    console.log("sinlge");
+    window.isSingleClick = true;
+    setTimeout(() => {
+      if (window.isSingleClick) {
+        createModal(e);
+
+      }
+    }, 250);
+  });
+
+  document
+    .querySelector("#tableContainer tbody")
+    .addEventListener("dblclick", (e) => {
+      console.log("double");
+      window.isSingleClick = false;
+      selectSimilar(e);
+    });
 }
 export async function selectSimilar(e) {
   let rowEle = e.target.parentNode;
