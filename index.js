@@ -124,6 +124,7 @@ async function handleRefreshSesameButton() {
 }
 function setListeners() {
   setListenerModal()
+  console.log("lis")
   document.addEventListener('scroll',(e)=>createTruckDraw(getLocalStorage("listadoCamiones")))
   document
     .getElementById("refreshSesame")
