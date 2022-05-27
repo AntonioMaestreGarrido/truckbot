@@ -263,10 +263,15 @@ async function getMmaData(listado) {
   //const test = await listado.forEach(async (camion, index) => {
   const test = await Promise.allSettled(
     listado.map(async (camion, index) => {
-      if (!camion[FIELD.ARRIVED] || !camion[FIELD.LOGGED]) {
+      if (!camion[FIELD.ARRIVED] || !camion[FIELD.LOGGED] && camion[FIELD.EXPECTED]!=="Cancelled!") {
         let vrid = camion[FIELD.VRID];
 
         let data = await fetchMmatTruckStopsData(camion[FIELD.VRID]);
+        if(data.executionStatus==="CANCELLED"){
+          listado[index][FIELD.EXPECTED]="Cancelled!"
+          saveLocalStorage("listadoCamiones", listado);
+          return
+        }
         //console.log(ele[VRID],data[SITE.name])
         data.forEach((ele) => {
           if (
