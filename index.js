@@ -467,11 +467,26 @@ export function truckData(lista, vrid, field, value) {
   }
   return lista;
 }
-
+function isScreenLockSupported() {
+  return ('wakeLock' in navigator);
+ }
+async function getScreenLock() {
+  if(isScreenLockSupported()){
+    let screenLock;
+    try {
+       screenLock = await navigator.wakeLock.request('screen');
+    } catch(err) {
+       console.log(err.name, err.message);
+    }
+    return screenLock;
+  }
+}
 function handleStartButton(e) {
   start();
   if (e.target.checked) {
-    handleStartButton.start = setInterval(start, 120000);
+    handleStartButton.start = setInterval(start,120000);
+    getScreenLock()
+
   } else {
     console.log("STOP");
     clearInterval(handleStartButton.start);
