@@ -8,15 +8,15 @@ export async function createModal(e) {
   vrid = e.target.parentElement.getAttribute("VRID");
 
   
-  const modal = document.getElementById("modalInfo");
+  const modal = document.querySelector(".info");
   resetModal(modal)
   modal.style.display = "block";
   modal.setAttribute("vrid", vrid);
-  modal.querySelector("#modalVRID").textContent = `VRID: ${vrid}`;
+  modal.querySelector(".VRID").textContent = `VRID: ${vrid}`;
   let datos = await fetchMmatTruckData(vrid);
-  modal.querySelector("#modalEmpresa").textContent = `Carrier: ${datos.carrier}`;
-  modal.querySelector("#modalAcount").textContent = `${datos.shipperAccounts[0]}`;
-  modal.querySelector("#modalRuta").textContent = `${datos.route}`;
+  modal.querySelector(".empresa").textContent = `Carrier: ${datos.carrier}`;
+  modal.querySelector(".acount").textContent = `${datos.shipperAccounts[0]}`;
+  modal.querySelector(".ruta").textContent = `${datos.route}`;
   
   
   console.log(datos)
@@ -29,7 +29,7 @@ function getVridFromModal() {
   return document.getElementById("modalInfo").getAttribute("VRID");
 }
 export function setListenerModal() {
-  const modal = document.getElementById("modalInfo");
+  const modal = document.querySelector(".info");
 
   modal
     .querySelector("#closeModal")
@@ -77,9 +77,9 @@ export function setListenerModal() {
 function resetModal(modal){
     
   
-  modal.querySelector("#modalEmpresa").textContent = `Carrier: `;
-  modal.querySelector("#modalAcount").textContent = `Account:`;
-  modal.querySelector("#modalRuta").textContent = `Route:`;
+  modal.querySelector(".empresa").textContent = `Carrier: `;
+  modal.querySelector(".acount").textContent = `Account:`;
+  modal.querySelector(".ruta").textContent = `Route:`;
 
 }
 function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
