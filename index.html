@@ -67,12 +67,12 @@
     <img id="testTruck" class="drawTruck" src="./src/imgs/amazonTruck2.gif" alt="spiner">
     <div id="trucksDrawsContainer"></div>
     <div id="loading"></div>
-    <div id="modalInfo">
+    <div class="modal info">
         <button id="closeModal">x</button>
-        <p id="modalVRID">VRID</p>
-        <p id="modalEmpresa">Carrier:</p>
-        <p id="modalAcount" >Acount</p>
-        <P id="modalRuta">Ruta</P>
+        <p class="modal VRID">VRID</p>
+        <p class="modal empresa">Carrier:</p>
+        <p class="modal acount" >Acount</p>
+        <P class="modal ruta">Ruta</P>
         <button class="modal cmr">CMR</button>
         
         <button class="modal fmc">fmc</button>
@@ -81,6 +81,42 @@
         <button class="modal yardEvents">Yard history</button>
         <button class="modal gate">Gate</button>
         <button class="modal test">test</button>
+
+    </div>
+    <div class="modal setting">
+        <button id="closeModal">x</button>
+        <p class="modal site">Site</p>
+        <input type="text">
+        <p class="modal longitud">Longitud:</p>
+        <input type="text">
+        <p class="modal latitud" >Latitud</p>
+        <input type="text">
+        <P class="modal notilog">notificar sistema</P>
+        <select >
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+            
+        </select>
+        
+        <p class="modal sound" >Sonido</p>
+        <select >
+            <option value="1">Clasic</option>
+            <option value="2">Festive</option>
+            <option value="3">Deluxe</option>
+            <option value="4">Discrete</option>
+        </select>
+        <P class="modal notiloog">notificar chime</P>
+        <select >
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+            
+        </select>
+        <P class="modal notiloog">chime weebhook address </P>
+        <input type="text">
+        
+        
+        <button class="setting save">Save</button>
+      
 
     </div>
 

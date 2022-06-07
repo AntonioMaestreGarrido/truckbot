@@ -108,9 +108,9 @@ th input {
 #notificationHistory p {
   font-weight: 600;
 }
-#modalInfo {
+.modal {
   position: static;
-  display: none;
+  /* display: none; */
   width: 400px;
 
   background-color: rgb(226, 168, 43);
