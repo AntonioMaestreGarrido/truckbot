@@ -16,6 +16,7 @@ import {
 import {
   fetchMmatTruckData,
   fetchMmatTruckStopsData,
+  fetchPlayYard,
   fetchSesameData,
   fetchSscData,
   fetchYardData,
@@ -101,8 +102,11 @@ async function handleRefreshSesameButton() {
 
   // fantastic oneliner to find keys in 2d arrays
   // console.log(oldList.some(row=>row.includes( "VRID")))
+let a= new Date()
+  // let newLista = refineArray(await fetchSesameData());
+  let newLista = await fetchSesameData();
 
-  let newLista = refineArray(await fetchSesameData());
+console.log((new Date()-a)/1000)
   if (oldList === undefined) {
     oldList = [...newLista];
   } else {
@@ -137,24 +141,7 @@ function setListeners() {
     .getElementById("refreshSesame")
     .addEventListener("click", () => handleRefreshSesameButton());
 
-  // document.querySelector("#tableContainer tbody").addEventListener("click", (e) => {
-  //   console.log("sinlge");
-  //   window.isSingleClick = true;
-  //   setTimeout(() => {
-  //     if (window.isSingleClick) {
-  //       createModal(e);
 
-  //     }
-  //   }, 250);
-  // });
-
-  // document
-  //   .querySelector("#tableContainer tbody")
-  //   .addEventListener("dblclick", (e) => {
-  //     console.log("double");
-  //     window.isSingleClick = false;
-  //     selectSimilar(e);
-  //   });
   document
 
     .getElementById("render")
@@ -171,7 +158,7 @@ function setListeners() {
     .addEventListener("click", (e) => start(e));
   document
     .getElementById("testYard")
-    .addEventListener("click", (e) => testYard(e));
+    .addEventListener("click", (e) => fetchPlayYard(e));
   document
     .getElementById("testNotification")
     .addEventListener("click", (e) => sendNotification(e));

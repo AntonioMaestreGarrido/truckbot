@@ -4,22 +4,50 @@
 
 
 
-
-
 export async function fetchSesameData() {
-    let listado = await fetch("http://localhost:3001/sesame")
+    let listado = await fetch("http://localhost:3001/getSesame")
                                 
       .then((response) => response.json())
       .then((data) => {
           
           let listado=data
           console.log(listado)
-          return listado
+          return listado.loadsWithInYardDestinationMetadata
         
       })
       .catch((error) => console.log("No se ha podido acceder a Sesame Gate", error));
       return listado
   }
+  
+  export async function fetchPlayYard() {
+    let listado = await fetch("http://localhost:3001/playYard")
+                                
+      .then((response) => response.json())
+      .then((data) => {
+          
+          let listado=data
+          console.log(listado)
+          return listado.locationsSummaries[0].locations
+        
+      })
+      .catch((error) => console.log("No se ha podido acceder a Sesame Gate", error));
+      console.log(listado)
+      return listado
+  }
+// export async function fetchSesameData() {
+//     let listado = await fetch("http://localhost:3001/sesame")
+                                
+//       .then((response) => response.json())
+//       .then((data) => {
+          
+//           let listado=data
+//           console.log(listado)
+//           return listado
+        
+//       })
+//       .catch((error) => console.log("No se ha podido acceder a Sesame Gate", error));
+//       return listado
+//   }
   export async function fetchSscData() {
       
      let scc=await fetch("http://localhost:3001/scc")
